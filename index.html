@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mods Exec — O que você está jogando hoje?</title>
+<meta name="theme-color" content="#0c0d24">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f1029;--nav:#0c0d24;--panel:#17183a;--panel2:#1f2149;--border:#2a2c5c;--text:#fff;--muted:#a2a5cc;--g:#2de6a7;--g2:#14b886;--danger:#ff5d73;color-scheme:dark;box-sizing:border-box}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;line-height:1.5;padding-bottom:env(safe-area-inset-bottom,0px)}
+button,input,select,textarea{font:inherit}
+a{color:inherit}
+nav{position:sticky;top:0;z-index:30;background:var(--nav);border-bottom:1px solid var(--border);padding:calc(14px + env(safe-area-inset-top,0px)) 24px 14px;display:flex;align-items:center;gap:26px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;cursor:pointer;text-decoration:none}
+.logo i{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--g),#2563eb);display:grid;place-items:center;font-style:normal;color:#0c0d24;font-size:18px}
+.links{display:flex;gap:22px;font-weight:600;font-size:15.5px}.links a{text-decoration:none}.links a:hover{color:var(--g)}
+.sp{flex:1}
+.btn{border:1px solid var(--border);background:transparent;color:var(--text);border-radius:8px;padding:9px 16px;font-weight:700;font-size:14px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:7px;transition:.15s}
+.btn:hover{border-color:var(--g);color:var(--g)}
+.btn.g{background:var(--g);border-color:var(--g);color:#06231a}.btn.g:hover{background:#5cf0bd;color:#06231a}
+.btn.d{color:var(--danger);border-color:rgba(255,93,115,.4)}.btn.d:hover{background:rgba(255,93,115,.1);color:var(--danger);border-color:var(--danger)}
+.hero{position:relative;min-height:340px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:50px 20px 40px;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(115deg,#1d4ed8 0 22%,transparent 22%),linear-gradient(115deg,transparent 22%,#0f766e 22% 40%,transparent 40%),linear-gradient(115deg,transparent 40%,#3b2f63 40% 62%,transparent 62%),linear-gradient(115deg,transparent 62%,#7f1d1d 62% 80%,transparent 80%),linear-gradient(115deg,transparent 80%,#9d174d 80%);opacity:.55;filter:saturate(1.2)}
+.hero::after{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(to bottom,rgba(15,16,41,.35),var(--bg) 96%)}
+.hero>*{position:relative;z-index:1}
+.hero h1{margin:0 0 12px;font-size:clamp(30px,6vw,52px);font-weight:800;letter-spacing:-1.5px;line-height:1.1}.hero h1 span{color:var(--g)}
+.hero p{margin:0;color:#d7d9f2;font-size:clamp(14px,2vw,18px)}.hero p b{color:var(--g);font-weight:500}
+.wrap{max-width:1440px;margin:0 auto;padding:0 24px}
+.search{position:relative;margin:-6px auto 34px;max-width:1440px;padding:0 24px}
+.search input{width:100%;background:rgba(12,13,36,.9);border:1px solid #4a4ea8;border-radius:8px;color:var(--text);padding:15px 18px 15px 46px;font-size:16px}
+.search input:focus{outline:2px solid var(--g);outline-offset:1px}
+.search svg{position:absolute;left:41px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.sh{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:30px 0 18px;flex-wrap:wrap}
+.sh h2{margin:0;font-size:clamp(22px,3vw,30px);font-weight:700;display:flex;align-items:center;gap:12px}.sh h2 i{font-style:normal;color:var(--g)}
+.sh a{font-size:14px;font-weight:700;color:var(--muted);text-decoration:none;cursor:pointer}.sh a:hover{color:var(--g)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:24px}
+.com{cursor:pointer;text-decoration:none;display:block;transition:transform .2s;position:relative}.xcom{position:absolute;top:8px;right:8px;z-index:2;padding:5px 9px;background:rgba(12,13,36,.85)}.com:hover{transform:translateY(-4px)}
+.cover{aspect-ratio:3/4;border-radius:8px;background-size:cover;background-position:center;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:14px;box-shadow:0 8px 22px rgba(0,0,0,.4)}
+.cover .em{position:absolute;top:22%;left:50%;transform:translateX(-50%);font-size:58px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.45))}
+.cover b{position:relative;font-size:20px;font-weight:800;line-height:1.1;text-shadow:0 2px 8px rgba(0,0,0,.7);overflow-wrap:anywhere}
+.com h3{margin:12px 0 6px;font-size:16px;font-weight:600}
+.cs{display:flex;gap:14px;font-size:12.5px;color:var(--muted);font-weight:600}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:60px 20px;background:var(--panel);border:1px dashed var(--border);border-radius:12px}
+.chead{display:flex;gap:22px;align-items:center;margin:30px 0 22px;flex-wrap:wrap}
+.chead .cover{width:120px;aspect-ratio:3/4;flex-shrink:0;padding:0}.chead .cover .em{top:50%;transform:translate(-50%,-50%);font-size:44px}
+.chead h1{margin:0 0 6px;font-size:clamp(26px,4vw,38px)}.chead p{margin:0;color:var(--muted)}
+.back{color:var(--muted);font-weight:700;font-size:14px;cursor:pointer;display:inline-block;margin-top:24px;text-decoration:none}.back:hover{color:var(--g)}
+.tools{display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.tools input,.tools select{background:var(--panel);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:11px 14px}.tools input{flex:1;min-width:200px}
+.tools input:focus,.tools select:focus{outline:2px solid var(--g)}
+.mods{display:flex;flex-direction:column;gap:12px}
+.mrow{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px;transition:.15s}.mrow:hover{border-color:#4a4ea8}
+.mtop{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.mic{width:64px;height:64px;border-radius:10px;background:var(--panel2) center/cover;display:grid;place-items:center;font-size:28px;flex-shrink:0}
+.mi{flex:1;min-width:200px}.mi h3{margin:0 0 4px;font-size:17px;overflow-wrap:anywhere}
+.tg{display:flex;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--muted);font-weight:600}
+.tg span{background:var(--panel2);border-radius:999px;padding:2px 10px}.tg .gr{color:var(--g)}
+.ma{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.vote{background:var(--panel2);border:1px solid transparent;color:var(--muted);border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:700;cursor:pointer}.vote:hover{color:#fff}
+.vote.on{border-color:var(--g);color:var(--g)}.vote.off.on{border-color:var(--danger);color:var(--danger)}
+details{margin-top:12px}summary{cursor:pointer;color:var(--muted);font-size:13px;font-weight:600}summary:hover{color:var(--g)}
+.desc{margin-top:8px;background:var(--nav);border:1px solid var(--border);border-radius:8px;padding:12px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13.5px;color:#d7d9f2}
+.banner{margin:50px 0 10px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:linear-gradient(135deg,rgba(45,230,167,.12),rgba(37,99,235,.1));border:1px solid rgba(45,230,167,.3);border-radius:14px;padding:20px 24px}
+.banner b{display:block;font-size:17px}.banner span{color:var(--muted);font-size:14px}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:30px 0 40px;border-top:1px solid var(--border);margin-top:40px}
+.ov{position:fixed;inset:0;background:rgba(5,6,20,.8);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:20px;z-index:60}.ov.open{display:flex}
+.modal{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:26px;width:460px;max-width:100%;max-height:90vh;overflow-y:auto}.modal h2{margin:0 0 18px}
+.f{margin-bottom:14px}.f label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
+.f input,.f select,.f textarea{width:100%;background:var(--nav);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:11px 12px}.f input:focus,.f select:focus,.f textarea:focus{outline:2px solid var(--g)}
+.row{display:flex;gap:10px}.row .f{flex:1}.end{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;flex-wrap:wrap}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--panel2);border:1px solid var(--g);padding:11px 18px;border-radius:999px;font-weight:600;font-size:13.5px;z-index:99;display:none;max-width:92vw}
+.adm{display:none!important}.admin .adm{display:inline-flex!important}
+@media(max-width:700px){nav{padding-left:14px;padding-right:14px;gap:12px}.links{display:none}.wrap,.search{padding:0 14px}.search svg{left:30px}.grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:16px}}
+</style>
+</head>
+<body>
+<nav>
+ <a class="logo" href="#"><i>📦</i>Mods Exec</a>
+ <div class="links"><a href="#">Comunidades</a><a id="lDc" href="#" target="_blank" rel="noopener noreferrer">Discord</a><a id="lYt" href="#" target="_blank" rel="noopener noreferrer">YouTube</a></div>
+ <div class="sp"></div>
+ <button class="btn" onclick="openOv('donate')">💛 Doar via Pix</button>
+ <button class="btn g adm" onclick="openMod()">+ Postar Mod</button>
+ <button class="btn adm" onclick="exportData()">Exportar</button>
+ <button class="btn adm" onclick="document.getElementById('imp').click()">Importar</button>
+ <input type="file" id="imp" accept=".json" hidden>
+ <button class="btn g" id="admBtn" onclick="toggleAdmin()">→ Entrar</button>
+</nav>
+<main id="view"></main>
+<footer>📦 Mods Exec · Feito para a comunidade gamer · © <span id="yr"></span></footer>
+
+<div class="ov" id="modOv"><div class="modal">
+ <h2 id="mTitle">Postar Mod</h2>
+ <div class="f"><label>Nome do mod</label><input id="mName" maxlength="80"></div>
+ <div class="row"><div class="f"><label>Jogo</label><select id="mGame"></select></div><div class="f"><label>Categoria</label><select id="mCat"><option>Texturas</option><option>Mapas</option><option>Personagens</option><option>Gameplay</option><option>Gráficos</option><option>Utilidades</option><option>Outros</option></select></div></div>
+ <div class="row"><div class="f"><label>Versão</label><input id="mVer" placeholder="1.0"></div><div class="f"><label>Tamanho</label><input id="mSize" placeholder="12 MB"></div></div>
+ <div class="f"><label>Link do arquivo (download)</label><input id="mUrl" placeholder="https://… ou /mods/arquivo.zip"></div>
+ <div class="f"><label>Imagem do mod (link, opcional)</label><input id="mImg" placeholder="https://…/capa.jpg"></div>
+ <div class="f"><label>Descrição e instalação</label><textarea id="mDesc" rows="4"></textarea></div>
+ <div class="end"><button class="btn" onclick="closeOv()">Cancelar</button><button class="btn g" onclick="saveMod()">Salvar</button></div>
+</div></div>
+<div class="ov" id="comOv"><div class="modal">
+ <h2>Nova comunidade (jogo)</h2>
+ <div class="f"><label>Nome do jogo</label><input id="cName" maxlength="40"></div>
+ <div class="row"><div class="f"><label>Emoji</label><input id="cIcon" maxlength="4" placeholder="🎮"></div><div class="f" style="flex:3"><label>Imagem de capa (link, opcional)</label><input id="cImg" placeholder="https://…/capa.jpg"></div></div>
+ <div class="end"><button class="btn" onclick="closeOv()">Cancelar</button><button class="btn g" onclick="saveCom()">Criar</button></div>
+</div></div>
+<div class="ov" id="donate"><div class="modal">
+ <h2>💛 Apoiar com Pix</h2>
+ <p style="color:var(--muted);font-size:14px;margin-top:-8px">Ajude a manter o <b>Mods Exec</b> no ar! Copie a chave Pix:</p>
+ <div style="display:flex;gap:10px;align-items:center;justify-content:space-between;background:var(--nav);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin:14px 0"><span id="pix" style="font-family:monospace;font-weight:700;color:var(--g);overflow-wrap:anywhere"></span><button class="btn g" onclick="copyPix()">Copiar</button></div>
+ <div class="end"><button class="btn" onclick="closeOv()">Fechar</button></div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===== CONFIGURAÇÃO — edite aqui ===== */
+const CFG={discord:'https://discord.gg/yXw4pxZG6',youtube:'https://www.youtube.com/@seucanal',pix:'sua-chave-pix@email.com',adminPass:'troque-esta-senha'}; // senha só visual
+const COMS0=[['Minecraft','⛏️'],['GTA V','🚗'],['Skyrim','🐉'],['Stardew Valley','🌾'],['The Sims 4','🏠'],['Cyberpunk 2077','🤖'],['Terraria','🌳'],['Outros','🎮']].map((c,i)=>({id:slug(c[0]),name:c[0],icon:c[1],img:'',at:Date.now()-i*1e8}));
+const MODS0=[
+ {id:1,name:'Texturas Realistas 4K (exemplo)',game:'minecraft',cat:'Texturas',ver:'1.2',size:'48 MB',url:'',img:'',desc:'Pacote de texturas em alta resolução.\nInstalação: extraia na pasta resourcepacks e ative nas opções do jogo.',dl:1240,ok:86,old:3,at:Date.now()-5e8},
+ {id:2,name:'Pack de Carros Esportivos (exemplo)',game:'gta-v',cat:'Gameplay',ver:'3.0',size:'320 MB',url:'',img:'',desc:'Veículos esportivos com handling ajustado. Requer gerenciador de mods.',dl:980,ok:52,old:9,at:Date.now()-3e8},
+ {id:3,name:'Cidades Expandidas (exemplo)',game:'skyrim',cat:'Mapas',ver:'2.1',size:'85 MB',url:'',img:'',desc:'Expande as cidades principais com novas construções e NPCs.',dl:640,ok:31,old:1,at:Date.now()-2e8},
+ {id:4,name:'Fazenda Deluxe (exemplo)',game:'stardew-valley',cat:'Gameplay',ver:'1.0',size:'6 MB',url:'',img:'',desc:'Novos animais, cultivos e decorações.',dl:410,ok:18,old:0,at:Date.now()-1e8}];
+const $=id=>document.getElementById(id);
+function slug(s){return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'jogo'}
+const esc=s=>String(s??'').replace(/[&<>"'`]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','`':'&#96;'}[c]));
+function safeUrl(u){try{u=String(u||'').trim();if(!u)return'';const p=new URL(u,location.href);return/^https?:$/.test(p.protocol)?p.href:''}catch(e){return''}}
+const ld=(k,d)=>{try{const r=localStorage.getItem(k);return r?JSON.parse(r):d}catch(e){return d}};
+const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+let coms=ld('mx2_coms',COMS0),mods=ld('mx2_mods',MODS0),votes=ld('mx2_votes',{}),isAdmin=false,editing=null,q='',mq='',sort='dl';
+const save=()=>{sv('mx2_coms',coms);sv('mx2_mods',mods)};
+function toast(m){const t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(t._h);t._h=setTimeout(()=>t.style.display='none',2800)}
+function fmt(n){const f=(v,s)=>(Math.round(v*10)/10).toString().replace('.',',')+s;return n>=1e9?f(n/1e9,'B'):n>=1e6?f(n/1e6,'M'):n>=1e3?Math.round(n/1e3)+' mil':String(n)}
+function bg(c){const im=safeUrl(c.img);if(im)return`background-image:linear-gradient(to top,rgba(0,0,0,.65),transparent 55%),url('${esc(im)}')`;let h=0;for(const ch of c.name)h=(h*31+ch.charCodeAt(0))%360;return`background:linear-gradient(160deg,hsl(${h},70%,42%),hsl(${(h+50)%360},65%,16%))`}
+const stats=id=>{const l=mods.filter(m=>m.game===id);return{n:l.length,d:l.reduce((a,m)=>a+m.dl,0)}};
+function card(c){const s=stats(c.id);return`<a class="com" href="#c-${c.id}"><button class="btn d adm xcom" onclick="event.preventDefault();event.stopPropagation();delCom('${c.id}')" type="button" aria-label="Apagar comunidade">🗑️</button><div class="cover" style="${bg(c)}">${safeUrl(c.img)?'':`<span class="em">${esc(c.icon)}</span>`}<b>${esc(c.name)}</b></div><h3>${esc(c.name)}</h3><div class="cs"><span>📦 ${fmt(s.n)}</span><span>⬇ ${fmt(s.d)}</span></div></a>`}
+function home(){
+ const all=mods.length,dl=mods.reduce((a,m)=>a+m.dl,0);
+ const f=coms.filter(c=>!q||c.name.toLowerCase().includes(q.toLowerCase()));
+ const top=[...f].sort((a,b)=>stats(b.id).d-stats(a.id).d),nw=[...f].sort((a,b)=>b.at-a.at);
+ $('view').innerHTML=`<section class="hero"><h1>O que <span>você</span> está jogando hoje?</h1><p>Escolha entre mais de <b>${fmt(all)} mods</b> para <b>${coms.length} jogos</b>.</p></section>
+ <div class="search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="sq" type="search" placeholder="Comunidades de pesquisa..." value="${esc(q)}" aria-label="Pesquisar comunidades"></div>
+ <div class="wrap"><div class="sh"><h2><i>🔥</i>${q?'Resultados':'Principais Comunidades'}</h2><button class="btn adm" onclick="openOv('comOv')">+ Nova comunidade</button></div>
+ <div class="grid">${top.length?top.map(card).join(''):'<div class="empty">Nenhuma comunidade encontrada.</div>'}</div>
+ ${q?'':`<div class="sh"><h2><i>✨</i>Novas Comunidades</h2></div><div class="grid">${nw.slice(0,7).map(card).join('')}</div>`}
+ <div class="banner"><div><b>💬 Faça parte da comunidade</b><span>Peça mods, tire dúvidas e acompanhe as novidades.</span></div><a class="btn g" href="${esc(CFG.discord)}" target="_blank" rel="noopener noreferrer">Entrar no Discord</a></div></div>`;
+ const i=$('sq');i.addEventListener('input',()=>{q=i.value;const p=i.selectionStart;home();const n=$('sq');n.focus();n.setSelectionRange(p,p)});
+}
+function community(id){
+ const c=coms.find(x=>x.id===id);if(!c){location.hash='';return}
+ const s=stats(id);
+ $('view').innerHTML=`<div class="wrap"><a class="back" href="#">← Todas as comunidades</a>
+ <div class="chead"><div class="cover" style="${bg(c)}">${safeUrl(c.img)?'':`<span class="em">${esc(c.icon)}</span>`}</div><div><h1>${esc(c.name)}</h1><p>📦 ${fmt(s.n)} mods · ⬇ ${fmt(s.d)} downloads</p><button class="btn d adm" style="margin-top:12px" onclick="delCom('${c.id}')" type="button">🗑️ Apagar comunidade</button></div></div>
+ <div class="tools"><input id="mq" type="search" placeholder="Buscar mods em ${esc(c.name)}..." value="${esc(mq)}" aria-label="Buscar mods"><select id="so" aria-label="Ordenar"><option value="dl">Mais baixados</option><option value="new">Mais recentes</option><option value="az">A–Z</option></select></div>
+ <div id="ml"></div></div>`;
+ $('so').value=sort;
+ const draw=()=>{const l=mods.filter(m=>m.game===id&&(!mq||(m.name+m.cat).toLowerCase().includes(mq.toLowerCase()))).sort((a,b)=>sort==='dl'?b.dl-a.dl:sort==='az'?a.name.localeCompare(b.name):b.at-a.at);
+  $('ml').innerHTML=l.length?'<div class="mods">'+l.map(m=>{const im=safeUrl(m.img),v=votes[m.id];return`<div class="mrow"><div class="mtop"><div class="mic" ${im?`style="background-image:url('${esc(im)}')"`:''}>${im?'':esc(c.icon)}</div><div class="mi"><h3>${esc(m.name)}</h3><div class="tg"><span class="gr">${esc(m.cat)}</span><span>v${esc(m.ver||'—')}</span><span>💾 ${esc(m.size||'—')}</span><span>⬇ ${fmt(m.dl)}</span></div></div><div class="ma"><button class="vote ${v==='ok'?'on':''}" onclick="vote(${m.id},'ok')">👍 ${m.ok}</button><button class="vote off ${v==='old'?'on':''}" onclick="vote(${m.id},'old')">👎 ${m.old}</button><button class="btn g" onclick="dl(${m.id})">⬇ Baixar</button><button class="btn adm" onclick="openMod(${m.id})">✏️</button><button class="btn d adm" onclick="del(${m.id})">🗑️</button></div></div><details><summary>Descrição e instalação</summary><div class="desc">${esc(m.desc||'Sem descrição.')}</div></details></div>`}).join('')+'</div>':'<div class="empty">Nenhum mod aqui ainda.</div>'};
+ draw();$('mq').addEventListener('input',e=>{mq=e.target.value;draw()});$('so').addEventListener('change',e=>{sort=e.target.value;draw()});
+}
+function route(){const h=location.hash.slice(1);window.scrollTo(0,0);if(h.startsWith('c-')){mq='';community(h.slice(2))}else home()}
+addEventListener('hashchange',route);
+function rerender(){route()}
+function dl(id){const m=mods.find(x=>x.id===id),u=safeUrl(m&&m.url);if(!u)return toast('Este mod ainda não tem link de download.');m.dl++;save();window.open(u,'_blank','noopener');rerenderKeep()}
+function rerenderKeep(){const h=location.hash.slice(1);if(h.startsWith('c-'))community(h.slice(2));else home()}
+function vote(id,t){const m=mods.find(x=>x.id===id),p=votes[id];if(!m||p===t)return;if(p)m[p]=Math.max(0,m[p]-1);m[t]++;votes[id]=t;save();sv('mx2_votes',votes);rerenderKeep()}
+function openOv(id){$(id).classList.add('open')}
+function closeOv(){document.querySelectorAll('.ov').forEach(o=>o.classList.remove('open'))}
+function fillGames(){$('mGame').innerHTML=coms.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('')}
+function openMod(id){if(!coms.length)return toast('Crie uma comunidade (jogo) primeiro.');editing=id||null;const m=id?mods.find(x=>x.id===id):{};fillGames();const h=location.hash.slice(3);$('mTitle').textContent=id?'Editar Mod':'Postar Mod';$('mName').value=m.name||'';$('mGame').value=m.game||(coms.some(c=>c.id===h)?h:coms[0].id);$('mCat').value=m.cat||'Texturas';$('mVer').value=m.ver||'';$('mSize').value=m.size||'';$('mUrl').value=m.url||'';$('mImg').value=m.img||'';$('mDesc').value=m.desc||'';openOv('modOv')}
+function saveMod(){const name=$('mName').value.trim();if(!name)return toast('Preencha o nome do mod.');const url=$('mUrl').value.trim(),img=$('mImg').value.trim();if((url&&!safeUrl(url))||(img&&!safeUrl(img)))return toast('Links inválidos (http, https ou caminho do site).');
+ const d={name,game:$('mGame').value,cat:$('mCat').value,ver:$('mVer').value.trim(),size:$('mSize').value.trim(),url,img,desc:$('mDesc').value.trim()};
+ if(editing)Object.assign(mods.find(x=>x.id===editing),d);else mods.push({id:Date.now(),dl:0,ok:0,old:0,at:Date.now(),...d});
+ save();closeOv();rerenderKeep();toast('Mod salvo!')}
+function del(id){if(!confirm('Apagar este mod?'))return;mods=mods.filter(x=>x.id!==id);save();rerenderKeep()}
+function delCom(id){const c=coms.find(x=>x.id===id);if(!c)return;const n=mods.filter(m=>m.game===id).length;if(!confirm('Apagar a comunidade "'+c.name+'"'+(n?' e os '+n+' mods dentro dela':'')+'?'))return;coms=coms.filter(x=>x.id!==id);mods=mods.filter(m=>m.game!==id);save();if(location.hash)location.hash='';else home();toast('Comunidade apagada.')}
+function saveCom(){const name=$('cName').value.trim();if(!name)return toast('Preencha o nome do jogo.');let id=slug(name);if(coms.some(c=>c.id===id))return toast('Essa comunidade já existe.');const img=$('cImg').value.trim();if(img&&!safeUrl(img))return toast('Link da imagem inválido.');
+ coms.push({id,name,icon:$('cIcon').value.trim()||'🎮',img,at:Date.now()});save();closeOv();$('cName').value='';$('cIcon').value='';$('cImg').value='';home();toast('Comunidade criada!')}
+function toggleAdmin(){if(isAdmin)isAdmin=false;else{const p=prompt('Senha de administrador:');if(p!==CFG.adminPass)return toast('Senha incorreta.');isAdmin=true}document.body.classList.toggle('admin',isAdmin);$('admBtn').textContent=isAdmin?'👑 Sair do admin':'→ Entrar'}
+function exportData(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({coms,mods},null,2)],{type:'application/json'}));a.download='modsexec-backup.json';a.click()}
+$('imp').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.mods)||!Array.isArray(d.coms))throw 0;mods=d.mods;coms=d.coms;save();route();toast('Importado!')}catch(x){toast('Arquivo inválido.')}};r.readAsText(f)});
+async function copyPix(){try{await navigator.clipboard.writeText(CFG.pix);toast('Chave Pix copiada!')}catch(e){toast('Chave Pix: '+CFG.pix)}}
+document.querySelectorAll('.ov').forEach(o=>o.addEventListener('mousedown',e=>{if(e.target===o)closeOv()}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeOv()});
+$('lDc').href=CFG.discord;$('lYt').href=CFG.youtube;$('pix').textContent=CFG.pix;$('yr').textContent=new Date().getFullYear();
+route();
+</script>
+</body>
+</html>
