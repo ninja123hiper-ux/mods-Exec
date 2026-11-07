@@ -1,191 +1,2616 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Mods Exec — O que você está jogando hoje?</title>
-<meta name="theme-color" content="#0c0d24">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#0f1029;--nav:#0c0d24;--panel:#17183a;--panel2:#1f2149;--border:#2a2c5c;--text:#fff;--muted:#a2a5cc;--g:#2de6a7;--g2:#14b886;--danger:#ff5d73;color-scheme:dark;box-sizing:border-box}
-*{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;line-height:1.5;padding-bottom:env(safe-area-inset-bottom,0px)}
-button,input,select,textarea{font:inherit}
-a{color:inherit}
-nav{position:sticky;top:0;z-index:30;background:var(--nav);border-bottom:1px solid var(--border);padding:calc(14px + env(safe-area-inset-top,0px)) 24px 14px;display:flex;align-items:center;gap:26px;flex-wrap:wrap}
-.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;cursor:pointer;text-decoration:none}
-.logo i{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--g),#2563eb);display:grid;place-items:center;font-style:normal;color:#0c0d24;font-size:18px}
-.links{display:flex;gap:22px;font-weight:600;font-size:15.5px}.links a{text-decoration:none}.links a:hover{color:var(--g)}
-.sp{flex:1}
-.btn{border:1px solid var(--border);background:transparent;color:var(--text);border-radius:8px;padding:9px 16px;font-weight:700;font-size:14px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:7px;transition:.15s}
-.btn:hover{border-color:var(--g);color:var(--g)}
-.btn.g{background:var(--g);border-color:var(--g);color:#06231a}.btn.g:hover{background:#5cf0bd;color:#06231a}
-.btn.d{color:var(--danger);border-color:rgba(255,93,115,.4)}.btn.d:hover{background:rgba(255,93,115,.1);color:var(--danger);border-color:var(--danger)}
-.hero{position:relative;min-height:340px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:50px 20px 40px;overflow:hidden}
-.hero::before{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(115deg,#1d4ed8 0 22%,transparent 22%),linear-gradient(115deg,transparent 22%,#0f766e 22% 40%,transparent 40%),linear-gradient(115deg,transparent 40%,#3b2f63 40% 62%,transparent 62%),linear-gradient(115deg,transparent 62%,#7f1d1d 62% 80%,transparent 80%),linear-gradient(115deg,transparent 80%,#9d174d 80%);opacity:.55;filter:saturate(1.2)}
-.hero::after{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(to bottom,rgba(15,16,41,.35),var(--bg) 96%)}
-.hero>*{position:relative;z-index:1}
-.hero h1{margin:0 0 12px;font-size:clamp(30px,6vw,52px);font-weight:800;letter-spacing:-1.5px;line-height:1.1}.hero h1 span{color:var(--g)}
-.hero p{margin:0;color:#d7d9f2;font-size:clamp(14px,2vw,18px)}.hero p b{color:var(--g);font-weight:500}
-.wrap{max-width:1440px;margin:0 auto;padding:0 24px}
-.search{position:relative;margin:-6px auto 34px;max-width:1440px;padding:0 24px}
-.search input{width:100%;background:rgba(12,13,36,.9);border:1px solid #4a4ea8;border-radius:8px;color:var(--text);padding:15px 18px 15px 46px;font-size:16px}
-.search input:focus{outline:2px solid var(--g);outline-offset:1px}
-.search svg{position:absolute;left:41px;top:50%;transform:translateY(-50%);color:var(--muted)}
-.sh{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:30px 0 18px;flex-wrap:wrap}
-.sh h2{margin:0;font-size:clamp(22px,3vw,30px);font-weight:700;display:flex;align-items:center;gap:12px}.sh h2 i{font-style:normal;color:var(--g)}
-.sh a{font-size:14px;font-weight:700;color:var(--muted);text-decoration:none;cursor:pointer}.sh a:hover{color:var(--g)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:24px}
-.com{cursor:pointer;text-decoration:none;display:block;transition:transform .2s;position:relative}.xcom{position:absolute;top:8px;right:8px;z-index:2;padding:5px 9px;background:rgba(12,13,36,.85)}.com:hover{transform:translateY(-4px)}
-.cover{aspect-ratio:3/4;border-radius:8px;background-size:cover;background-position:center;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:14px;box-shadow:0 8px 22px rgba(0,0,0,.4)}
-.cover .em{position:absolute;top:22%;left:50%;transform:translateX(-50%);font-size:58px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.45))}
-.cover b{position:relative;font-size:20px;font-weight:800;line-height:1.1;text-shadow:0 2px 8px rgba(0,0,0,.7);overflow-wrap:anywhere}
-.com h3{margin:12px 0 6px;font-size:16px;font-weight:600}
-.cs{display:flex;gap:14px;font-size:12.5px;color:var(--muted);font-weight:600}
-.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:60px 20px;background:var(--panel);border:1px dashed var(--border);border-radius:12px}
-.chead{display:flex;gap:22px;align-items:center;margin:30px 0 22px;flex-wrap:wrap}
-.chead .cover{width:120px;aspect-ratio:3/4;flex-shrink:0;padding:0}.chead .cover .em{top:50%;transform:translate(-50%,-50%);font-size:44px}
-.chead h1{margin:0 0 6px;font-size:clamp(26px,4vw,38px)}.chead p{margin:0;color:var(--muted)}
-.back{color:var(--muted);font-weight:700;font-size:14px;cursor:pointer;display:inline-block;margin-top:24px;text-decoration:none}.back:hover{color:var(--g)}
-.tools{display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap}
-.tools input,.tools select{background:var(--panel);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:11px 14px}.tools input{flex:1;min-width:200px}
-.tools input:focus,.tools select:focus{outline:2px solid var(--g)}
-.mods{display:flex;flex-direction:column;gap:12px}
-.mrow{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px;transition:.15s}.mrow:hover{border-color:#4a4ea8}
-.mtop{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
-.mic{width:64px;height:64px;border-radius:10px;background:var(--panel2) center/cover;display:grid;place-items:center;font-size:28px;flex-shrink:0}
-.mi{flex:1;min-width:200px}.mi h3{margin:0 0 4px;font-size:17px;overflow-wrap:anywhere}
-.tg{display:flex;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--muted);font-weight:600}
-.tg span{background:var(--panel2);border-radius:999px;padding:2px 10px}.tg .gr{color:var(--g)}
-.ma{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.vote{background:var(--panel2);border:1px solid transparent;color:var(--muted);border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:700;cursor:pointer}.vote:hover{color:#fff}
-.vote.on{border-color:var(--g);color:var(--g)}.vote.off.on{border-color:var(--danger);color:var(--danger)}
-details{margin-top:12px}summary{cursor:pointer;color:var(--muted);font-size:13px;font-weight:600}summary:hover{color:var(--g)}
-.desc{margin-top:8px;background:var(--nav);border:1px solid var(--border);border-radius:8px;padding:12px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13.5px;color:#d7d9f2}
-.banner{margin:50px 0 10px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:linear-gradient(135deg,rgba(45,230,167,.12),rgba(37,99,235,.1));border:1px solid rgba(45,230,167,.3);border-radius:14px;padding:20px 24px}
-.banner b{display:block;font-size:17px}.banner span{color:var(--muted);font-size:14px}
-footer{text-align:center;color:var(--muted);font-size:13px;padding:30px 0 40px;border-top:1px solid var(--border);margin-top:40px}
-.ov{position:fixed;inset:0;background:rgba(5,6,20,.8);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:20px;z-index:60}.ov.open{display:flex}
-.modal{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:26px;width:460px;max-width:100%;max-height:90vh;overflow-y:auto}.modal h2{margin:0 0 18px}
-.f{margin-bottom:14px}.f label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}
-.f input,.f select,.f textarea{width:100%;background:var(--nav);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:11px 12px}.f input:focus,.f select:focus,.f textarea:focus{outline:2px solid var(--g)}
-.row{display:flex;gap:10px}.row .f{flex:1}.end{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;flex-wrap:wrap}
-.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--panel2);border:1px solid var(--g);padding:11px 18px;border-radius:999px;font-weight:600;font-size:13.5px;z-index:99;display:none;max-width:92vw}
-.adm{display:none!important}.admin .adm{display:inline-flex!important}
-@media(max-width:700px){nav{padding-left:14px;padding-right:14px;gap:12px}.links{display:none}.wrap,.search{padding:0 14px}.search svg{left:30px}.grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:16px}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Mods Exec — O que você está jogando hoje?</title>
+    <meta name="description" content="Biblioteca e central oficial de mods para PC e console. Mods de Minecraft, GTA V, Skyrim, Stardew Valley, Cyberpunk 2077 e muito mais.">
+    <meta property="og:title" content="Mods Exec — Central Oficial de Mods">
+    <meta property="og:description" content="Mods seguros, testados e com tutoriais de instalação para seus jogos favoritos.">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#0a0e14">
+
+    <!-- Ícone Favicon SVG -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%25' stop-color='%2310b981'/><stop offset='100%25' stop-color='%232563eb'/></linearGradient></defs><rect width='24' height='24' rx='6' fill='%230a0e14'/><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5' stroke='url(%23g)' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+
+    <!-- Fonte Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #0a0e14;
+            --panel-bg: #10151f;
+            --panel-hover: #192132;
+            --panel-raised: #141b29;
+            --text-main: #f3f5f9;
+            --text-muted: #8e97af;
+            --text-faint: #5b6478;
+            --accent: #10b981;
+            --accent-glow: rgba(16, 185, 129, 0.4);
+            --accent-hover: #059669;
+            --accent-soft: rgba(16, 185, 129, 0.12);
+            --accent-blue: #2563eb;
+            --accent-blue-soft: rgba(37, 99, 235, 0.14);
+            --border: #1e2638;
+            --border-strong: #2a354d;
+            --danger: #ef4444;
+            --danger-soft: rgba(239, 68, 68, 0.12);
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --ease: cubic-bezier(.22, .61, .36, 1);
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-color);
+            background-image:
+                radial-gradient(circle at 10% 8%, rgba(16, 185, 129, 0.13), transparent 42%),
+                radial-gradient(circle at 90% 16%, rgba(37, 99, 235, 0.15), transparent 40%),
+                radial-gradient(circle at 12% 85%, rgba(37, 99, 235, 0.10), transparent 38%),
+                radial-gradient(circle at 90% 88%, rgba(16, 185, 129, 0.12), transparent 42%),
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: auto, auto, auto, auto, 42px 42px, 42px 42px;
+            background-attachment: fixed;
+            color: var(--text-main);
+            font-family: 'Inter', system-ui, sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1040px;
+            width: 100%;
+        }
+
+        a { color: inherit; text-decoration: none; }
+        button, input, select, textarea { font-family: inherit; }
+
+        /* ============== FUNDO ANIMADO (LOW-POLY & ORBS) ============== */
+        #bg-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: -2;
+            display: block;
+        }
+
+        .bg-orb-layer {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.22;
+        }
+
+        .orb-1 { width: 420px; height: 420px; background: var(--accent); top: -120px; left: -100px; }
+        .orb-2 { width: 480px; height: 480px; background: var(--accent-blue); bottom: -150px; right: -120px; }
+
+        @media (prefers-reduced-motion: no-preference) {
+            .orb { animation: orbFloat 22s ease-in-out infinite alternate; }
+            .orb-2 { animation-delay: -8s; }
+        }
+
+        @keyframes orbFloat {
+            0% { transform: translate(0,0) scale(1); }
+            100% { transform: translate(30px, 40px) scale(1.1); }
+        }
+
+        /* ============== CABEÇALHO (HEADER) ============== */
+        .header {
+            background-color: var(--panel-bg);
+            border-radius: var(--radius-lg);
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.55);
+            gap: 16px;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.45s var(--ease) both;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .logo-svg {
+            position: relative;
+            background: linear-gradient(135deg, var(--accent), var(--accent-blue));
+            border-radius: 12px;
+            width: 46px; height: 46px;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 0 20px var(--accent-glow), inset 0 0 12px rgba(255,255,255,0.25);
+            flex-shrink: 0;
+            transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+        }
+
+        .logo-area:hover .logo-svg {
+            transform: rotate(-10deg) scale(1.08);
+            box-shadow: 0 0 28px rgba(37,99,235,0.65), inset 0 0 14px rgba(255,255,255,0.3);
+        }
+
+        .logo-ring {
+            position: absolute;
+            inset: -4px;
+            border-radius: 14px;
+            border: 1.5px solid rgba(16, 185, 129, 0.6);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo-area:hover .logo-ring {
+            opacity: 1;
+            animation: ringPulse 1.6s ease-out infinite;
+        }
+
+        @keyframes ringPulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.35); opacity: 0; }
+        }
+
+        .title h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #ffffff, #b4bccd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sync-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--accent);
+            font-weight: 600;
+            margin-top: 3px;
+        }
+
+        .dot {
+            width: 7px;
+            height: 7px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent);
+            animation: pulse 2s infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 7px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* ============== BOTÕES ============== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+            font-weight: 700;
+            font-size: 13.5px;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+            border: 1px solid transparent;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn:active { transform: scale(0.97); }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: #06231a;
+            border-color: var(--accent);
+            box-shadow: 0 4px 14px var(--accent-glow);
+        }
+        .btn-primary:hover {
+            background-color: #34d399;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px var(--accent-glow);
+        }
+
+        .btn-blue {
+            background: linear-gradient(135deg, var(--accent-blue), #1d4ed8);
+            color: white;
+            box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+        }
+        .btn-blue:hover {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--border);
+        }
+        .btn-outline:hover {
+            background-color: var(--panel-hover);
+            border-color: var(--border-strong);
+            color: white;
+        }
+
+        .btn-discord {
+            background: #5865f2;
+            color: white;
+            box-shadow: 0 4px 14px rgba(88,101,242,0.35);
+        }
+        .btn-discord:hover {
+            background: #4752c4;
+            transform: translateY(-1px);
+        }
+
+        .btn-youtube {
+            background: rgba(255, 0, 0, 0.14);
+            border: 1px solid rgba(255, 0, 0, 0.35);
+            color: #ff6b6b;
+        }
+        .btn-youtube:hover {
+            background: rgba(255, 0, 0, 0.25);
+            color: #ff8585;
+            transform: translateY(-1px);
+        }
+
+        .btn-pix {
+            background: rgba(245, 158, 11, 0.12);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            color: #fbbf24;
+        }
+        .btn-pix:hover {
+            background: rgba(245, 158, 11, 0.22);
+            transform: translateY(-1px);
+        }
+
+        .btn-delete {
+            background-color: transparent;
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        .btn-delete:hover {
+            background-color: var(--danger-soft);
+            border-color: var(--danger);
+        }
+
+        .btn-sm { padding: 6px 12px; font-size: 12.5px; border-radius: 6px; }
+
+        .admin-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #1a1200;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 9px;
+            border-radius: 999px;
+        }
+
+        /* ============== HERO BANNER ============== */
+        .hero {
+            position: relative;
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 34px 28px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.45);
+            animation: fadeInUp 0.45s var(--ease) 0.05s both;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            background:
+                linear-gradient(115deg, rgba(37,99,235,0.22) 0 25%, transparent 25%),
+                linear-gradient(115deg, transparent 25%, rgba(16,185,129,0.18) 25% 45%, transparent 45%),
+                linear-gradient(115deg, transparent 45%, rgba(139,92,246,0.16) 45% 70%, transparent 70%);
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h2 {
+            margin: 0 0 10px;
+            font-size: clamp(24px, 4vw, 36px);
+            font-weight: 900;
+            letter-spacing: -1px;
+            line-height: 1.15;
+        }
+
+        .hero h2 span {
+            background: linear-gradient(135deg, var(--accent), #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            margin: 0 0 18px;
+            color: #cbd5e1;
+            font-size: 15px;
+            max-width: 680px;
+            line-height: 1.5;
+        }
+
+        .hero p b { color: var(--accent); font-weight: 600; }
+
+        .hero-stats-row {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .hero-stat {
+            background: rgba(10, 14, 20, 0.7);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 8px 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .hero-stat b {
+            color: var(--text-main);
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        /* ============== NAVEGAÇÃO PRINCIPAL (TABS) ============== */
+        .main-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 22px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 6px;
+            animation: fadeInUp 0.45s var(--ease) 0.1s both;
+        }
+
+        .main-nav-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: transparent;
+            border: none;
+            border-radius: 10px;
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 14.5px;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+        }
+
+        .main-nav-btn:hover {
+            color: var(--text-main);
+            background: var(--panel-hover);
+        }
+
+        .main-nav-btn.active {
+            background: linear-gradient(135deg, var(--accent), #059669);
+            color: #052016;
+            box-shadow: 0 4px 16px var(--accent-glow);
+        }
+
+        .main-nav-icon { font-size: 17px; }
+
+        /* ============== BARRA DE BUSCA ============== */
+        .search-wrap {
+            position: relative;
+            margin-bottom: 16px;
+            animation: fadeInUp 0.45s var(--ease) 0.15s both;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 14px 44px 14px 48px;
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: white;
+            font-size: 15px;
+            transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-soft);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .search-clear {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: none;
+            background: var(--panel-hover);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        .search-clear:hover { color: white; background: var(--border-strong); }
+
+        /* ============== FILTROS DE JOGOS & CATEGORIAS ============== */
+        .filter-section {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            animation: fadeInUp 0.45s var(--ease) 0.2s both;
+        }
+
+        .filter-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            scrollbar-width: thin;
+        }
+
+        .filter-row::-webkit-scrollbar { height: 5px; }
+        .filter-row::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+        .filter-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-faint);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-right: 4px;
+            flex-shrink: 0;
+        }
+
+        .pill {
+            padding: 7px 14px;
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 13.5px;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: 0.2s var(--ease);
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pill:hover:not(.active) {
+            background-color: var(--panel-hover);
+            color: white;
+            border-color: var(--border-strong);
+        }
+
+        .pill.active {
+            background: linear-gradient(135deg, var(--accent-blue), #1d4ed8);
+            color: white;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 12px rgba(37,99,235,0.4);
+        }
+
+        .sort-select {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-main);
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .sort-select:focus { outline: none; border-color: var(--accent); }
+
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 22px 0 14px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .list-header h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .admin-controls-bar {
+            display: none;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        body.admin-mode .admin-controls-bar { display: inline-flex; }
+
+        /* ============== CARDS DE MODS ============== */
+        .mods-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .mod-card {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 18px 20px;
+            transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease), border-color 0.2s var(--ease);
+            animation: fadeInUp 0.4s var(--ease) both;
+            position: relative;
+        }
+
+        .mod-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 26px rgba(0,0,0,0.45);
+            border-color: var(--border-strong);
+        }
+
+        .mod-card.featured-card {
+            border-color: rgba(16, 185, 129, 0.4);
+            background: linear-gradient(180deg, rgba(16,185,129,0.04), var(--panel-bg));
+        }
+
+        .mod-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .mod-info-group {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            flex: 1;
+            min-width: 260px;
+        }
+
+        .mod-icon {
+            width: 58px;
+            height: 58px;
+            border-radius: 12px;
+            flex-shrink: 0;
+            background-color: var(--panel-raised);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .mod-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .mod-title-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 4px;
+        }
+
+        .mod-title {
+            margin: 0;
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--text-main);
+            overflow-wrap: anywhere;
+        }
+
+        .badge-recommended {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(16, 185, 129, 0.14);
+            color: var(--accent);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            font-size: 11px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 999px;
+        }
+
+        .badge-platform {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--panel-raised);
+            border: 1px solid var(--border);
+            color: #cbd5e1;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 999px;
+        }
+
+        .mod-desc-short {
+            margin: 0 0 8px;
+            font-size: 13.5px;
+            color: var(--text-muted);
+            line-height: 1.45;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .mod-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            font-size: 12.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .mod-tag {
+            background: var(--panel-raised);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 2px 9px;
+            font-size: 12px;
+            color: #d1d5db;
+        }
+
+        .mod-tag.game-tag {
+            background: rgba(37, 99, 235, 0.15);
+            border-color: rgba(37, 99, 235, 0.35);
+            color: #93c5fd;
+        }
+
+        .mod-tag.cat-tag {
+            background: rgba(16, 185, 129, 0.12);
+            border-color: rgba(16, 185, 129, 0.3);
+            color: #6ee7b7;
+        }
+
+        .mod-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+
+        .vote-btn {
+            background: var(--panel-raised);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            border-radius: 999px;
+            padding: 7px 12px;
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s var(--ease);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .vote-btn:hover { color: white; border-color: var(--border-strong); }
+        .vote-btn.voted-ok { background: rgba(16,185,129,0.14); border-color: var(--accent); color: var(--accent); }
+        .vote-btn.voted-old { background: rgba(239,68,68,0.14); border-color: var(--danger); color: var(--danger); }
+
+        /* ============== COMUNIDADES (GRID DE JOGOS) ============== */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        .game-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s var(--ease), border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 28px rgba(0,0,0,0.5);
+        }
+
+        .game-cover {
+            aspect-ratio: 4/5;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 14px;
+            overflow: hidden;
+        }
+
+        .game-cover::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(10,14,20,0.95) 0%, rgba(10,14,20,0.4) 50%, transparent 100%);
+        }
+
+        .game-cover .game-emoji {
+            position: absolute;
+            top: 24%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 54px;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));
+            transition: transform 0.3s var(--ease);
+        }
+
+        .game-card:hover .game-cover .game-emoji {
+            transform: translateX(-50%) scale(1.15) rotate(4deg);
+        }
+
+        .game-cover b {
+            position: relative;
+            z-index: 1;
+            font-size: 18px;
+            font-weight: 800;
+            line-height: 1.15;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+        }
+
+        .game-card-body {
+            padding: 12px 14px;
+            background: var(--panel-bg);
+        }
+
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .game-delete-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            z-index: 3;
+            background: rgba(10,14,20,0.85);
+            border: 1px solid rgba(239,68,68,0.4);
+            color: var(--danger);
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            display: none;
+        }
+        body.admin-mode .game-delete-btn { display: block; }
+
+        /* ============== MURAL DA COMUNIDADE ============== */
+        .comments-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .comment-post-box {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 18px;
+        }
+
+        .comment-post-box textarea {
+            width: 100%;
+            background: var(--panel-raised);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: white;
+            padding: 12px;
+            resize: vertical;
+            min-height: 80px;
+            font-size: 14px;
+        }
+        .comment-post-box textarea:focus { outline: none; border-color: var(--accent); }
+
+        .comment-author-input {
+            width: 100%;
+            max-width: 240px;
+            background: var(--panel-raised);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: white;
+            padding: 9px 12px;
+            font-size: 13.5px;
+        }
+        .comment-author-input:focus { outline: none; border-color: var(--accent); }
+
+        .comment-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            gap: 14px;
+            animation: fadeInUp 0.35s var(--ease) both;
+        }
+
+        .comment-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-blue));
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+            color: #06231a;
+            flex-shrink: 0;
+            font-size: 15px;
+        }
+
+        .comment-content { flex: 1; min-width: 0; }
+        .comment-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .comment-author { font-weight: 700; font-size: 14px; }
+        .comment-time { font-size: 12px; color: var(--text-faint); }
+        .comment-text { font-size: 13.5px; color: #e2e8f0; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+
+        /* ============== BANNERS (DISCORD & PIX) ============== */
+        .banner-discord {
+            margin-top: 34px;
+            padding: 22px 26px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, rgba(88,101,242,0.18), rgba(37,99,235,0.08));
+            border: 1px solid rgba(88,101,242,0.35);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .banner-discord strong { display: block; font-size: 16px; margin-bottom: 4px; }
+        .banner-discord span { font-size: 13.5px; color: var(--text-muted); }
+
+        /* ============== MODAIS ============== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 7, 14, 0.82);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .modal-overlay.open { display: flex; }
+
+        .modal {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 26px;
+            width: 520px;
+            max-width: 100%;
+            max-height: 88vh;
+            overflow-y: auto;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.65);
+            animation: modalFadeIn 0.22s var(--ease) forwards;
+        }
+
+        .modal.modal-wide { width: 720px; }
+
+        @keyframes modalFadeIn {
+            from { transform: scale(0.95) translateY(10px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .modal h2 { margin: 0 0 16px; font-size: 21px; font-weight: 800; }
+
+        .form-group { margin-bottom: 14px; }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #d1d5db;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            background: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: white;
+            padding: 11px 12px;
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px var(--accent-soft);
+        }
+
+        .form-row { display: flex; gap: 12px; }
+        .form-row .form-group { flex: 1; }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* Detalhes do Mod Modal */
+        .mod-detail-header {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+
+        .mod-detail-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 14px;
+            background: var(--panel-raised);
+            border: 1px solid var(--border);
+            display: grid;
+            place-items: center;
+            font-size: 34px;
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+        }
+
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            color: var(--accent);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 700;
+            margin: 12px 0 16px;
+        }
+
+        .install-guide-box {
+            background: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            margin: 14px 0;
+            font-size: 13.5px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            color: #d1d5db;
+        }
+
+        /* ============== TOAST ============== */
+        #toast {
+            position: fixed;
+            left: 50%;
+            bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+            transform: translateX(-50%);
+            background: var(--panel-raised);
+            border: 1px solid var(--accent);
+            color: white;
+            padding: 12px 22px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 13.5px;
+            z-index: 2000;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            max-width: 90vw;
+            animation: fadeInUp 0.25s var(--ease) both;
+        }
+
+        /* ============== RODAPÉ (FOOTER) ============== */
+        footer {
+            text-align: center;
+            color: var(--text-faint);
+            font-size: 13px;
+            padding: 34px 0 14px;
+            border-top: 1px solid var(--border);
+            margin-top: 44px;
+        }
+
+        footer b { color: var(--text-muted); }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+            background: var(--panel-bg);
+            border: 1px dashed var(--border);
+            border-radius: var(--radius-md);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============== RESPONSIVO ============== */
+        @media (max-width: 720px) {
+            body { padding: 12px; }
+            .header { padding: 14px; gap: 12px; }
+            .title h1 { font-size: 18px; }
+            .main-nav { gap: 4px; padding: 4px; }
+            .main-nav-btn { padding: 10px 8px; font-size: 12.5px; gap: 4px; }
+            .mod-main { flex-direction: column; align-items: stretch; }
+            .mod-actions { width: 100%; justify-content: flex-start; }
+            .mod-actions .btn { flex: 1; }
+            .games-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
+            .hero { padding: 22px 18px; }
+            .hero h2 { font-size: 22px; }
+            .form-row { flex-direction: column; gap: 0; }
+        }
+    </style>
 </head>
 <body>
-<nav>
- <a class="logo" href="#"><i>📦</i>Mods Exec</a>
- <div class="links"><a href="#">Comunidades</a><a id="lDc" href="#" target="_blank" rel="noopener noreferrer">Discord</a><a id="lYt" href="#" target="_blank" rel="noopener noreferrer">YouTube</a></div>
- <div class="sp"></div>
- <button class="btn" onclick="openOv('donate')">💛 Doar via Pix</button>
- <button class="btn g adm" onclick="openMod()">+ Postar Mod</button>
- <button class="btn adm" onclick="exportData()">Exportar</button>
- <button class="btn adm" onclick="document.getElementById('imp').click()">Importar</button>
- <input type="file" id="imp" accept=".json" hidden>
- <button class="btn g" id="admBtn" onclick="toggleAdmin()">→ Entrar</button>
-</nav>
-<main id="view"></main>
-<footer>📦 Mods Exec · Feito para a comunidade gamer · © <span id="yr"></span></footer>
 
-<div class="ov" id="modOv"><div class="modal">
- <h2 id="mTitle">Postar Mod</h2>
- <div class="f"><label>Nome do mod</label><input id="mName" maxlength="80"></div>
- <div class="row"><div class="f"><label>Jogo</label><select id="mGame"></select></div><div class="f"><label>Categoria</label><select id="mCat"><option>Texturas</option><option>Mapas</option><option>Personagens</option><option>Gameplay</option><option>Gráficos</option><option>Utilidades</option><option>Outros</option></select></div></div>
- <div class="row"><div class="f"><label>Versão</label><input id="mVer" placeholder="1.0"></div><div class="f"><label>Tamanho</label><input id="mSize" placeholder="12 MB"></div></div>
- <div class="f"><label>Link do arquivo (download)</label><input id="mUrl" placeholder="https://… ou /mods/arquivo.zip"></div>
- <div class="f"><label>Imagem do mod (link, opcional)</label><input id="mImg" placeholder="https://…/capa.jpg"></div>
- <div class="f"><label>Descrição e instalação</label><textarea id="mDesc" rows="4"></textarea></div>
- <div class="end"><button class="btn" onclick="closeOv()">Cancelar</button><button class="btn g" onclick="saveMod()">Salvar</button></div>
-</div></div>
-<div class="ov" id="comOv"><div class="modal">
- <h2>Nova comunidade (jogo)</h2>
- <div class="f"><label>Nome do jogo</label><input id="cName" maxlength="40"></div>
- <div class="row"><div class="f"><label>Emoji</label><input id="cIcon" maxlength="4" placeholder="🎮"></div><div class="f" style="flex:3"><label>Imagem de capa (link, opcional)</label><input id="cImg" placeholder="https://…/capa.jpg"></div></div>
- <div class="end"><button class="btn" onclick="closeOv()">Cancelar</button><button class="btn g" onclick="saveCom()">Criar</button></div>
-</div></div>
-<div class="ov" id="donate"><div class="modal">
- <h2>💛 Apoiar com Pix</h2>
- <p style="color:var(--muted);font-size:14px;margin-top:-8px">Ajude a manter o <b>Mods Exec</b> no ar! Copie a chave Pix:</p>
- <div style="display:flex;gap:10px;align-items:center;justify-content:space-between;background:var(--nav);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin:14px 0"><span id="pix" style="font-family:monospace;font-weight:700;color:var(--g);overflow-wrap:anywhere"></span><button class="btn g" onclick="copyPix()">Copiar</button></div>
- <div class="end"><button class="btn" onclick="closeOv()">Fechar</button></div>
-</div></div>
-<div class="toast" id="toast"></div>
+<!-- Fundo Low-Poly com canvas e orbs luminosas -->
+<canvas id="bg-canvas" aria-hidden="true"></canvas>
+<div class="bg-orb-layer" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+</div>
 
+<div class="container">
+    <!-- Cabeçalho Principal -->
+    <header class="header">
+        <a class="logo-area" onclick="navigate('games')" href="#jogos">
+            <div class="logo-svg">
+                <div class="logo-ring"></div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+            </div>
+            <div class="title">
+                <h1>Mods Exec</h1>
+                <div class="sync-status"><div class="dot"></div> Mods Verificados · Comunidade Gamer</div>
+            </div>
+        </a>
+
+        <div class="header-actions">
+            <button class="btn btn-pix" onclick="openModal('pixModal')">💛 Doar via Pix</button>
+            <a class="btn btn-discord" id="headerDiscordLink" href="https://discord.gg/yXw4pxZG6" target="_blank" rel="noopener noreferrer">💬 Discord</a>
+            <a class="btn btn-youtube" id="headerYtLink" href="https://www.youtube.com/@seucanal" target="_blank" rel="noopener noreferrer">📺 YouTube</a>
+            <button class="btn btn-primary" id="adminToggleBtn" onclick="toggleAdminPrompt()">👑 Entrar</button>
+        </div>
+    </header>
+
+    <!-- Hero / Seção de Destaque -->
+    <section class="hero">
+        <div class="hero-content">
+            <h2>O que <span>você</span> está jogando hoje?</h2>
+            <p>Acesse pacotes de texturas, shaders, mapas, mecânicas de gameplay e utilidades testadas para os melhores jogos de PC e console.</p>
+            <div class="hero-stats-row">
+                <div class="hero-stat">📦 <b id="statModsCount">0</b> mods disponíveis</div>
+                <div class="hero-stat">🎮 <b id="statGamesCount">0</b> jogos e comunidades</div>
+                <div class="hero-stat">⬇️ <b id="statDownloadsCount">0</b> downloads realizados</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Navegação em Abas (Estilo NinjaExec) -->
+    <nav class="main-nav" role="tablist">
+        <button class="main-nav-btn active" id="tabGamesBtn" onclick="navigate('games')">
+            <span class="main-nav-icon">🎮</span> Jogos & Comunidades
+        </button>
+        <button class="main-nav-btn" id="tabTrendingBtn" onclick="navigate('trending')">
+            <span class="main-nav-icon">🔥</span> Em Alta
+        </button>
+        <button class="main-nav-btn" id="tabMuralBtn" onclick="navigate('mural')">
+            <span class="main-nav-icon">💬</span> Mural & Pedidos
+        </button>
+    </nav>
+
+    <!-- ===================== SEÇÃO: JOGOS & COMUNIDADES ===================== -->
+    <section id="gamesView">
+        <!-- Barra de Busca de Jogos e Comunidades -->
+        <div class="search-wrap">
+            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <input type="search" class="search-bar" id="gameSearchInput" placeholder="Pesquisar jogos ou comunidades (Minecraft, GTA V, Skyrim, Stardew Valley...)" oninput="onGameSearch()">
+            <button class="search-clear" id="gameSearchClearBtn" onclick="clearGameSearch()" aria-label="Limpar busca">✕</button>
+        </div>
+
+        <div class="list-header">
+            <h3><i>🎮</i> Escolha um Jogo / Comunidade</h3>
+            <div class="admin-controls-bar">
+                <button class="btn btn-sm btn-primary" onclick="openModal('gameModal')">+ Adicionar Novo Jogo</button>
+            </div>
+        </div>
+        <div class="games-grid" id="gamesGrid"></div>
+    </section>
+
+    <!-- ===================== SEÇÃO: MODS ===================== -->
+    <section id="modsView" style="display: none;">
+        <!-- Barra de Busca -->
+        <div class="search-wrap">
+            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <input type="search" class="search-bar" id="searchInput" placeholder="Pesquisar mods por nome, jogo, categoria ou versão..." oninput="onSearch()">
+            <button class="search-clear" id="searchClearBtn" onclick="clearSearch()" aria-label="Limpar busca">✕</button>
+        </div>
+
+        <!-- Filtros Rápidos (Jogos e Categorias) -->
+        <div class="filter-section">
+            <div class="filter-row" id="gameFilterRow"></div>
+            <div class="filter-row" id="categoryFilterRow"></div>
+        </div>
+
+        <!-- Cabeçalho da Listagem -->
+        <div class="list-header">
+            <h3 id="listTitle"><i>🔥</i> Todos os Mods</h3>
+            <div style="display:flex; gap:10px; align-items:center;">
+                <div class="admin-controls-bar">
+                    <span class="admin-chip">👑 ADMIN</span>
+                    <button class="btn btn-sm btn-primary" onclick="openModModal()">+ Postar Mod</button>
+                    <button class="btn btn-sm btn-outline" onclick="openModal('gameModal')">+ Novo Jogo</button>
+                    <button class="btn btn-sm btn-outline" onclick="exportData()">📦 Backup</button>
+                    <button class="btn btn-sm btn-outline" onclick="$('importInput').click()">📥 Importar</button>
+                    <input type="file" id="importInput" accept=".json" hidden onchange="importData(event)">
+                </div>
+                <select class="sort-select" id="sortSelect" onchange="onSortChange(this.value)">
+                    <option value="dl">Mais baixados</option>
+                    <option value="new">Mais recentes</option>
+                    <option value="votes">Melhor avaliados (👍)</option>
+                    <option value="az">Ordem alfabética (A–Z)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Lista de Mods -->
+        <div class="mods-grid" id="modsList"></div>
+    </section>
+
+    <!-- ===================== SEÇÃO: MURAL & PEDIDOS ===================== -->
+    <section id="muralView" style="display: none;">
+        <div class="list-header">
+            <h3><i>💬</i> Mural da Comunidade & Pedidos de Mods</h3>
+            <span style="font-size: 13px; color: var(--text-muted);">Peça novos mods, tire dúvidas ou compartilhe recomendações.</span>
+        </div>
+
+        <div class="comments-wrap">
+            <div class="comment-post-box">
+                <div style="display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
+                    <input type="text" id="muralAuthor" class="comment-author-input" placeholder="Seu apelido gamer...">
+                </div>
+                <textarea id="muralText" placeholder="Escreva seu comentário ou pedido de mod aqui (ex: 'Alguém tem mod de shaders leves para Minecraft 1.20?')..."></textarea>
+                <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                    <button class="btn btn-primary" onclick="postComment()">Enviar Mensagem</button>
+                </div>
+            </div>
+
+            <div id="muralList" style="display: flex; flex-direction: column; gap: 12px;"></div>
+        </div>
+    </section>
+
+    <!-- Banner do Discord Oficial -->
+    <div class="banner-discord">
+        <div>
+            <strong>💬 Faça parte da comunidade Mods Exec no Discord</strong>
+            <span>Receba notificações de atualizações, solicite mods exclusivos e tire dúvidas de instalação.</span>
+        </div>
+        <a class="btn btn-discord" id="bannerDiscordLink" href="https://discord.gg/yXw4pxZG6" target="_blank" rel="noopener noreferrer">Entrar no Servidor</a>
+    </div>
+
+    <!-- Rodapé Oficial -->
+    <footer>
+        <p>📦 <b>Mods Exec</b> · Biblioteca Colaborativa de Mods para Gamers · © <span id="yearSpan"></span></p>
+        <p style="font-size: 12px; margin-top: 4px;">Todos os mods pertencem aos seus respectivos criadores. Respeite as regras de cada desenvolvedor.</p>
+    </footer>
+</div>
+
+<!-- ===================== MODAIS ===================== -->
+
+<!-- Modal: Postar / Editar Mod -->
+<div class="modal-overlay" id="modModal">
+    <div class="modal modal-wide">
+        <h2 id="modModalTitle">Postar Novo Mod</h2>
+        <div class="form-group">
+            <label>Nome do Mod *</label>
+            <input type="text" id="formModName" placeholder="Ex: Texturas Ultra HD 4K, Realistic Physics Pack...">
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Jogo *</label>
+                <select id="formModGame"></select>
+            </div>
+            <div class="form-group">
+                <label>Categoria *</label>
+                <select id="formModCat">
+                    <option value="Texturas & Shaders">Texturas & Shaders</option>
+                    <option value="Mapas & Mundos">Mapas & Mundos</option>
+                    <option value="Personagens & Skins">Personagens & Skins</option>
+                    <option value="Gameplay & Mecânicas">Gameplay & Mecânicas</option>
+                    <option value="Gráficos & Visuais">Gráficos & Visuais</option>
+                    <option value="Utilidades & Ferramentas">Utilidades & Ferramentas</option>
+                    <option value="Veículos & Armas">Veículos & Armas</option>
+                    <option value="Pacotes (Modpacks)">Pacotes (Modpacks)</option>
+                    <option value="Outros">Outros</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Versão do Mod / Jogo</label>
+                <input type="text" id="formModVer" placeholder="Ex: v1.4.2 (compatível com 1.20+)">
+            </div>
+            <div class="form-group">
+                <label>Tamanho do Arquivo</label>
+                <input type="text" id="formModSize" placeholder="Ex: 48 MB, 1.2 GB...">
+            </div>
+            <div class="form-group">
+                <label>Plataforma</label>
+                <select id="formModPlatform">
+                    <option value="PC (Windows)">PC (Windows)</option>
+                    <option value="PC & Mobile">PC & Mobile</option>
+                    <option value="Android">Android</option>
+                    <option value="Todas as Plataformas">Todas as Plataformas</option>
+                </select>
+            </div>
+        </div>
+        <!-- Upload Direto de Arquivo do Mod -->
+        <div class="form-group" style="background:var(--panel-raised); border:1.5px dashed var(--accent); border-radius:12px; padding:16px; text-align:center;">
+            <label style="color:var(--accent); font-size:14px; font-weight:800; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer;" onclick="$('formModFile').click()">
+                📁 Enviar Arquivo Direto do Computador (.zip, .rar, .jar, .pak, etc.)
+            </label>
+            <div style="font-size:12.5px; color:var(--text-muted); margin:4px 0 10px;">
+                Ao escolher o arquivo do seu PC, qualquer pessoa que clicar em <b>"Baixar"</b> fará o download do arquivo automaticamente!
+            </div>
+            <input type="file" id="formModFile" style="display:none;" onchange="handleModFileUpload(this)">
+            <button type="button" class="btn btn-primary btn-sm" onclick="$('formModFile').click()">
+                ⚡ Escolher Arquivo do Meu PC
+            </button>
+            <div id="formModFileStatus" style="font-size:13px; font-weight:700; color:var(--text-main); margin-top:8px;">Nenhum arquivo do PC selecionado</div>
+        </div>
+
+        <div class="form-group">
+            <label>Ou Link Direto do Arquivo (Download Automático)</label>
+            <input type="text" id="formModUrl" placeholder="Ex: /mods/arquivo.zip ou https://drive.google.com/... ou https://dropbox.com/...">
+            <span style="font-size:12px; color:var(--text-faint); margin-top:4px; display:block;">
+                ⚡ Dica: Links do Google Drive e Dropbox são convertidos automaticamente para baixar direto no PC com 1 clique (sem telas de espera).
+            </span>
+        </div>
+        <div class="form-group">
+            <label>Link da Imagem de Capa (URL)</label>
+            <input type="url" id="formModImg" placeholder="https://.../capa.jpg (opcional)">
+        </div>
+        <div class="form-group">
+            <label>Requisitos (Opcional)</label>
+            <input type="text" id="formModReq" placeholder="Ex: Requer Fabric 1.20, ScriptHookV, SMAPI ou ModLoader">
+        </div>
+        <div class="form-group">
+            <label>Guia de Instalação e Descrição Completa *</label>
+            <textarea id="formModDesc" rows="4" placeholder="Explique o que o mod faz e o passo a passo para instalar na pasta do jogo..."></textarea>
+        </div>
+        <div class="form-group" style="display:flex; align-items:center; gap:8px;">
+            <input type="checkbox" id="formModFeatured" style="width:auto; cursor:pointer;">
+            <label for="formModFeatured" style="margin:0; cursor:pointer;">⭐ Marcar como 'Recomendado · Postado pelo Dono'</label>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-outline" onclick="closeModals()">Cancelar</button>
+            <button class="btn btn-primary" onclick="saveMod()">Salvar Mod</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Novo Jogo / Comunidade -->
+<div class="modal-overlay" id="gameModal">
+    <div class="modal">
+        <h2>Adicionar Novo Jogo</h2>
+        <div class="form-group">
+            <label>Nome do Jogo *</label>
+            <input type="text" id="formGameName" placeholder="Ex: Elden Ring, Red Dead Redemption 2...">
+        </div>
+        <div class="form-row">
+            <div class="form-group" style="flex: 1;">
+                <label>Emoji do Jogo</label>
+                <input type="text" id="formGameIcon" maxlength="4" placeholder="🎮">
+            </div>
+            <div class="form-group" style="flex: 3;">
+                <label>Imagem de Capa (URL Opcional)</label>
+                <input type="url" id="formGameImg" placeholder="https://.../capa-jogo.jpg">
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-outline" onclick="closeModals()">Cancelar</button>
+            <button class="btn btn-primary" onclick="saveGame()">Criar Comunidade</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Detalhes & Download do Mod -->
+<div class="modal-overlay" id="detailModal">
+    <div class="modal modal-wide">
+        <div class="mod-detail-header">
+            <div class="mod-detail-icon" id="detailIcon">📦</div>
+            <div>
+                <h2 id="detailTitle" style="margin:0 0 6px;">Nome do Mod</h2>
+                <div style="display:flex; gap:8px; flex-wrap:wrap; font-size:12.5px;" id="detailTags"></div>
+            </div>
+        </div>
+
+        <div class="security-badge">
+            🛡️ Arquivo Verificado: Livre de malwares, adwares ou executáveis maliciosos.
+        </div>
+
+        <div id="detailReqBox" style="background:var(--panel-raised); border:1px solid var(--border); border-radius:8px; padding:10px 14px; margin-bottom:14px; font-size:13px; display:none;">
+            <b>Requisitos:</b> <span id="detailReqText"></span>
+        </div>
+
+        <h4 style="margin:16px 0 8px; font-size:15px; color:var(--text-main);">📖 Como Instalar:</h4>
+        <div class="install-guide-box" id="detailDesc"></div>
+
+        <div style="background:var(--panel-raised); border:1px solid var(--border); border-radius:10px; padding:16px; margin:16px 0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div>
+                <div style="font-size:14px; font-weight:700;">Download do Arquivo</div>
+                <div style="font-size:12px; color:var(--text-muted);" id="detailFileInfo">Versão 1.0 · 45 MB</div>
+            </div>
+            <div style="display:flex; gap:8px;">
+                <button class="btn btn-outline" onclick="copyDetailLink()">📋 Copiar Link</button>
+                <button class="btn btn-primary" id="detailDownloadBtn">⬇️ Baixar Mod Agora</button>
+            </div>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn btn-outline" onclick="closeModals()">Fechar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Doação Pix -->
+<div class="modal-overlay" id="pixModal">
+    <div class="modal">
+        <h2>💛 Apoiar o Mods Exec com Pix</h2>
+        <p style="color:var(--text-muted); font-size:14px; margin-top:-6px;">
+            O Mods Exec é mantido 100% de forma independente para a comunidade. Qualquer contribuição ajuda a manter os servidores e a curadoria de mods no ar!
+        </p>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; background:var(--bg-color); border:1px solid var(--border); border-radius:8px; padding:12px 14px; margin:16px 0; gap:10px;">
+            <span id="pixKeyText" style="font-family:monospace; font-weight:800; color:var(--accent); overflow-wrap:anywhere;"></span>
+            <button class="btn btn-primary btn-sm" onclick="copyPixKey()">Copiar</button>
+        </div>
+
+        <div style="text-align:center; padding:10px; font-size:12.5px; color:var(--text-faint);">
+            Chave Pix oficial verificada · Muito obrigado pelo suporte!
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn btn-outline" onclick="closeModals()">Fechar</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notifier -->
+<div id="toast"></div>
+
+<!-- ===================== JAVASCRIPT ===================== -->
 <script>
-/* ===== CONFIGURAÇÃO — edite aqui ===== */
-const CFG={discord:'https://discord.gg/yXw4pxZG6',youtube:'https://www.youtube.com/@seucanal',pix:'sua-chave-pix@email.com',adminPass:'troque-esta-senha'}; // senha só visual
-const COMS0=[['Minecraft','⛏️'],['GTA V','🚗'],['Skyrim','🐉'],['Stardew Valley','🌾'],['The Sims 4','🏠'],['Cyberpunk 2077','🤖'],['Terraria','🌳'],['Outros','🎮']].map((c,i)=>({id:slug(c[0]),name:c[0],icon:c[1],img:'',at:Date.now()-i*1e8}));
-const MODS0=[
- {id:1,name:'Texturas Realistas 4K (exemplo)',game:'minecraft',cat:'Texturas',ver:'1.2',size:'48 MB',url:'',img:'',desc:'Pacote de texturas em alta resolução.\nInstalação: extraia na pasta resourcepacks e ative nas opções do jogo.',dl:1240,ok:86,old:3,at:Date.now()-5e8},
- {id:2,name:'Pack de Carros Esportivos (exemplo)',game:'gta-v',cat:'Gameplay',ver:'3.0',size:'320 MB',url:'',img:'',desc:'Veículos esportivos com handling ajustado. Requer gerenciador de mods.',dl:980,ok:52,old:9,at:Date.now()-3e8},
- {id:3,name:'Cidades Expandidas (exemplo)',game:'skyrim',cat:'Mapas',ver:'2.1',size:'85 MB',url:'',img:'',desc:'Expande as cidades principais com novas construções e NPCs.',dl:640,ok:31,old:1,at:Date.now()-2e8},
- {id:4,name:'Fazenda Deluxe (exemplo)',game:'stardew-valley',cat:'Gameplay',ver:'1.0',size:'6 MB',url:'',img:'',desc:'Novos animais, cultivos e decorações.',dl:410,ok:18,old:0,at:Date.now()-1e8}];
-const $=id=>document.getElementById(id);
-function slug(s){return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'jogo'}
-const esc=s=>String(s??'').replace(/[&<>"'`]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','`':'&#96;'}[c]));
-function safeUrl(u){try{u=String(u||'').trim();if(!u)return'';const p=new URL(u,location.href);return/^https?:$/.test(p.protocol)?p.href:''}catch(e){return''}}
-const ld=(k,d)=>{try{const r=localStorage.getItem(k);return r?JSON.parse(r):d}catch(e){return d}};
-const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
-let coms=ld('mx2_coms',COMS0),mods=ld('mx2_mods',MODS0),votes=ld('mx2_votes',{}),isAdmin=false,editing=null,q='',mq='',sort='dl';
-const save=()=>{sv('mx2_coms',coms);sv('mx2_mods',mods)};
-function toast(m){const t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(t._h);t._h=setTimeout(()=>t.style.display='none',2800)}
-function fmt(n){const f=(v,s)=>(Math.round(v*10)/10).toString().replace('.',',')+s;return n>=1e9?f(n/1e9,'B'):n>=1e6?f(n/1e6,'M'):n>=1e3?Math.round(n/1e3)+' mil':String(n)}
-function bg(c){const im=safeUrl(c.img);if(im)return`background-image:linear-gradient(to top,rgba(0,0,0,.65),transparent 55%),url('${esc(im)}')`;let h=0;for(const ch of c.name)h=(h*31+ch.charCodeAt(0))%360;return`background:linear-gradient(160deg,hsl(${h},70%,42%),hsl(${(h+50)%360},65%,16%))`}
-const stats=id=>{const l=mods.filter(m=>m.game===id);return{n:l.length,d:l.reduce((a,m)=>a+m.dl,0)}};
-function card(c){const s=stats(c.id);return`<a class="com" href="#c-${c.id}"><button class="btn d adm xcom" onclick="event.preventDefault();event.stopPropagation();delCom('${c.id}')" type="button" aria-label="Apagar comunidade">🗑️</button><div class="cover" style="${bg(c)}">${safeUrl(c.img)?'':`<span class="em">${esc(c.icon)}</span>`}<b>${esc(c.name)}</b></div><h3>${esc(c.name)}</h3><div class="cs"><span>📦 ${fmt(s.n)}</span><span>⬇ ${fmt(s.d)}</span></div></a>`}
-function home(){
- const all=mods.length,dl=mods.reduce((a,m)=>a+m.dl,0);
- const f=coms.filter(c=>!q||c.name.toLowerCase().includes(q.toLowerCase()));
- const top=[...f].sort((a,b)=>stats(b.id).d-stats(a.id).d),nw=[...f].sort((a,b)=>b.at-a.at);
- $('view').innerHTML=`<section class="hero"><h1>O que <span>você</span> está jogando hoje?</h1><p>Escolha entre mais de <b>${fmt(all)} mods</b> para <b>${coms.length} jogos</b>.</p></section>
- <div class="search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="sq" type="search" placeholder="Comunidades de pesquisa..." value="${esc(q)}" aria-label="Pesquisar comunidades"></div>
- <div class="wrap"><div class="sh"><h2><i>🔥</i>${q?'Resultados':'Principais Comunidades'}</h2><button class="btn adm" onclick="openOv('comOv')">+ Nova comunidade</button></div>
- <div class="grid">${top.length?top.map(card).join(''):'<div class="empty">Nenhuma comunidade encontrada.</div>'}</div>
- ${q?'':`<div class="sh"><h2><i>✨</i>Novas Comunidades</h2></div><div class="grid">${nw.slice(0,7).map(card).join('')}</div>`}
- <div class="banner"><div><b>💬 Faça parte da comunidade</b><span>Peça mods, tire dúvidas e acompanhe as novidades.</span></div><a class="btn g" href="${esc(CFG.discord)}" target="_blank" rel="noopener noreferrer">Entrar no Discord</a></div></div>`;
- const i=$('sq');i.addEventListener('input',()=>{q=i.value;const p=i.selectionStart;home();const n=$('sq');n.focus();n.setSelectionRange(p,p)});
+/* ===================== CONFIGURAÇÕES GLOBAIS ===================== */
+const CFG = {
+    discord: 'https://discord.gg/yXw4pxZG6',
+    youtube: 'https://www.youtube.com/@seucanal',
+    pix: 'rafael2008lz2@gmail.com',
+    adminPass: 'ninja919676' // Senha para habilitar o modo administrador
+};
+
+/* ===================== JOGOS PADRÃO ===================== */
+const DEFAULT_GAMES = [
+    { id: 'minecraft', name: 'Minecraft', icon: '⛏️', img: '' },
+    { id: 'gta-v', name: 'GTA V', icon: '🚗', img: '' },
+    { id: 'skyrim', name: 'Skyrim', icon: '🐉', img: '' },
+    { id: 'stardew-valley', name: 'Stardew Valley', icon: '🌾', img: '' },
+    { id: 'cyberpunk-2077', name: 'Cyberpunk 2077', icon: '🤖', img: '' },
+    { id: 'terraria', name: 'Terraria', icon: '🌳', img: '' },
+    { id: 'the-sims-4', name: 'The Sims 4', icon: '🏠', img: '' },
+    { id: 'elden-ring', name: 'Elden Ring', icon: '⚔️', img: '' },
+    { id: 'fallout-4', name: 'Fallout 4', icon: '☢️', img: '' },
+    { id: 'rdr2', name: 'Red Dead 2', icon: '🤠', img: '' },
+    { id: 'outros', name: 'Outros Jogos', icon: '🎮', img: '' }
+];
+
+/* ===================== CATEGORIAS PADRÃO ===================== */
+const CATEGORIES = [
+    'Todas',
+    'Texturas & Shaders',
+    'Mapas & Mundos',
+    'Personagens & Skins',
+    'Gameplay & Mecânicas',
+    'Gráficos & Visuais',
+    'Utilidades & Ferramentas',
+    'Veículos & Armas',
+    'Pacotes (Modpacks)'
+];
+
+/* ===================== MODS DE EXEMPLO INICIAIS ===================== */
+const DEFAULT_MODS = [
+    {
+        id: 1,
+        name: 'Complimentary Shaders Reimagined',
+        game: 'minecraft',
+        cat: 'Texturas & Shaders',
+        ver: 'v2.8.4 (1.16 - 1.20+)',
+        size: '12 MB',
+        platform: 'PC (Windows)',
+        url: 'https://modrinth.com/shader/complementary-reimagined',
+        img: '',
+        featured: true,
+        req: 'Iris Shaders ou OptiFine',
+        desc: 'Iluminação ultrarrealista, sombras dinâmicas, reflexos na água e céu com nuvens volumétricas personalizadas.\n\nComo instalar:\n1. Baixe o arquivo .zip dos shaders.\n2. Abra o Minecraft com Iris ou OptiFine instalado.\n3. Vá em Opções -> Gráficos -> Shaders -> Abrir pasta de shaders.\n4. Arraste o arquivo .zip para a pasta e selecione dentro do jogo.',
+        dl: 3420,
+        ok: 218,
+        old: 4,
+        at: Date.now() - 6e8
+    },
+    {
+        id: 2,
+        name: 'Realistic Driving V & Supercars Pack',
+        game: 'gta-v',
+        cat: 'Veículos & Armas',
+        ver: 'v4.5',
+        size: '420 MB',
+        platform: 'PC (Windows)',
+        url: '',
+        img: '',
+        featured: true,
+        req: 'ScriptHookV + OpenIV',
+        desc: 'Física de condução realista com mais de 35 carros esportivos e superesportivos detalhados em 4K com interiores personalizáveis.\n\nComo instalar:\n1. Instale o ScriptHookV na pasta raiz do GTA V.\n2. Use o OpenIV em Edit Mode e instale o pacote .oiv através do Package Installer.\n3. Inicie o jogo no modo história.',
+        dl: 2890,
+        ok: 174,
+        old: 7,
+        at: Date.now() - 4e8
+    },
+    {
+        id: 3,
+        name: 'Skyrim Flora & Cities Overhaul',
+        game: 'skyrim',
+        cat: 'Gráficos & Visuais',
+        ver: 'v3.2',
+        size: '680 MB',
+        platform: 'PC (Windows)',
+        url: '',
+        img: '',
+        featured: false,
+        req: 'SKSE64 + Vortex ou Mod Organizer 2',
+        desc: 'Reformula completamente a vegetação, árvores e cidades de Skyrim com novas texturas, árvores densas e iluminação aprimorada.\n\nComo instalar:\n1. Baixe e instale via Vortex ou Mod Organizer 2.\n2. Certifique-se de executar o jogo através do skse64_loader.exe.',
+        dl: 1940,
+        ok: 96,
+        old: 2,
+        at: Date.now() - 3e8
+    },
+    {
+        id: 4,
+        name: 'Stardew Valley Expanded (SVE)',
+        game: 'stardew-valley',
+        cat: 'Gameplay & Mecânicas',
+        ver: 'v1.14.24',
+        size: '88 MB',
+        platform: 'PC & Mobile',
+        url: 'https://www.nexusmods.com/stardewvalley/mods/3753',
+        img: '',
+        featured: true,
+        req: 'SMAPI 3.14+',
+        desc: 'Adiciona novas áreas no mapa, mais de 25 novos NPCs, novos festivais, cultivos inéditos e novas histórias românticas.\n\nComo instalar:\n1. Instale o SMAPI mais recente.\n2. Extraia o conteúdo de Stardew Valley Expanded dentro da pasta Stardew Valley/Mods.\n3. Execute o jogo pelo SMAPI.',
+        dl: 1620,
+        ok: 130,
+        old: 1,
+        at: Date.now() - 2e8
+    },
+    {
+        id: 5,
+        name: 'Cyberpunk 2077 HD Reworked Project',
+        game: 'cyberpunk-2077',
+        cat: 'Texturas & Shaders',
+        ver: 'v2.1',
+        size: '1.4 GB',
+        platform: 'PC (Windows)',
+        url: '',
+        img: '',
+        featured: false,
+        req: 'Compatível com Patch 2.0 e 2.1',
+        desc: 'Substitui centenas de texturas de Night City por versões em alta definição com relevo aprimorado sem impacto no desempenho.\n\nComo instalar:\n1. Extraia os arquivos .archive dentro da pasta Cyberpunk 2077/archive/pc/mod.',
+        dl: 1150,
+        ok: 82,
+        old: 3,
+        at: Date.now() - 1e8
+    },
+    {
+        id: 6,
+        name: 'Farming & Cooking Overhaul Deluxe',
+        game: 'the-sims-4',
+        cat: 'Gameplay & Mecânicas',
+        ver: 'v2.0',
+        size: '34 MB',
+        platform: 'PC (Windows)',
+        url: '',
+        img: '',
+        featured: false,
+        req: 'The Sims 4 Atualizado',
+        desc: 'Mais de 40 novas receitas caseiras, ingredientes colhíveis e opções de culinária artesanal para seus Sims.\n\nComo instalar:\n1. Extraia o arquivo .package na pasta Documentos/Electronic Arts/The Sims 4/Mods.\n2. Ative mods e scripts nas opções do jogo.',
+        dl: 970,
+        ok: 64,
+        old: 0,
+        at: Date.now() - 5e7
+    }
+];
+
+/* ===================== COMENTÁRIOS PADRÃO DO MURAL ===================== */
+const DEFAULT_COMMENTS = [
+    { id: 1, author: 'GamerBR99', text: 'Os shaders para Minecraft funcionaram perfeitamente com Iris! FPS liso demais.', at: Date.now() - 864e5 },
+    { id: 2, author: 'Lucas_Modder', text: 'Vocês poderiam trazer um pack de gráficos de Elden Ring e armas novas? Ficaria top!', at: Date.now() - 432e5 },
+    { id: 3, author: 'Dono Mods Exec', text: 'Sejam bem-vindos ao Mods Exec! Podem pedir novos mods aqui no mural que a gente adiciona na biblioteca.', at: Date.now() - 1e7, isOwner: true }
+];
+
+/* ===================== ESTADO DA APLICAÇÃO ===================== */
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"'`]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '`': '&#96;' }[c]));
+function slug(s) { return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'jogo'; }
+
+const loadStorage = (k, def) => { try { const r = localStorage.getItem(k); return r ? JSON.parse(r) : def; } catch (e) { return def; } };
+const saveStorage = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+
+let games = loadStorage('mx_games', DEFAULT_GAMES);
+let mods = loadStorage('mx_mods', DEFAULT_MODS);
+let mural = loadStorage('mx_mural', DEFAULT_COMMENTS);
+let votes = loadStorage('mx_votes', {});
+let isAdmin = sessionStorage.getItem('mx_isAdmin') === 'true';
+
+let currentSection = 'games';
+let selectedGame = 'todos';
+let selectedCategory = 'Todas';
+let searchQuery = '';
+let currentSort = 'dl';
+let editingModId = null;
+let currentDetailMod = null;
+
+function persistAll() {
+    saveStorage('mx_games', games);
+    saveStorage('mx_mods', mods);
+    saveStorage('mx_mural', mural);
+    updateStats();
 }
-function community(id){
- const c=coms.find(x=>x.id===id);if(!c){location.hash='';return}
- const s=stats(id);
- $('view').innerHTML=`<div class="wrap"><a class="back" href="#">← Todas as comunidades</a>
- <div class="chead"><div class="cover" style="${bg(c)}">${safeUrl(c.img)?'':`<span class="em">${esc(c.icon)}</span>`}</div><div><h1>${esc(c.name)}</h1><p>📦 ${fmt(s.n)} mods · ⬇ ${fmt(s.d)} downloads</p><button class="btn d adm" style="margin-top:12px" onclick="delCom('${c.id}')" type="button">🗑️ Apagar comunidade</button></div></div>
- <div class="tools"><input id="mq" type="search" placeholder="Buscar mods em ${esc(c.name)}..." value="${esc(mq)}" aria-label="Buscar mods"><select id="so" aria-label="Ordenar"><option value="dl">Mais baixados</option><option value="new">Mais recentes</option><option value="az">A–Z</option></select></div>
- <div id="ml"></div></div>`;
- $('so').value=sort;
- const draw=()=>{const l=mods.filter(m=>m.game===id&&(!mq||(m.name+m.cat).toLowerCase().includes(mq.toLowerCase()))).sort((a,b)=>sort==='dl'?b.dl-a.dl:sort==='az'?a.name.localeCompare(b.name):b.at-a.at);
-  $('ml').innerHTML=l.length?'<div class="mods">'+l.map(m=>{const im=safeUrl(m.img),v=votes[m.id];return`<div class="mrow"><div class="mtop"><div class="mic" ${im?`style="background-image:url('${esc(im)}')"`:''}>${im?'':esc(c.icon)}</div><div class="mi"><h3>${esc(m.name)}</h3><div class="tg"><span class="gr">${esc(m.cat)}</span><span>v${esc(m.ver||'—')}</span><span>💾 ${esc(m.size||'—')}</span><span>⬇ ${fmt(m.dl)}</span></div></div><div class="ma"><button class="vote ${v==='ok'?'on':''}" onclick="vote(${m.id},'ok')">👍 ${m.ok}</button><button class="vote off ${v==='old'?'on':''}" onclick="vote(${m.id},'old')">👎 ${m.old}</button><button class="btn g" onclick="dl(${m.id})">⬇ Baixar</button><button class="btn adm" onclick="openMod(${m.id})">✏️</button><button class="btn d adm" onclick="del(${m.id})">🗑️</button></div></div><details><summary>Descrição e instalação</summary><div class="desc">${esc(m.desc||'Sem descrição.')}</div></details></div>`}).join('')+'</div>':'<div class="empty">Nenhum mod aqui ainda.</div>'};
- draw();$('mq').addEventListener('input',e=>{mq=e.target.value;draw()});$('so').addEventListener('change',e=>{sort=e.target.value;draw()});
+
+/* ===================== FORMATAÇÃO & NÚMEROS ===================== */
+function fmtNumber(n) {
+    if (n >= 1e6) return (n / 1e6).toFixed(1).replace('.', ',') + 'M';
+    if (n >= 1e3) return (n / 1e3).toFixed(1).replace('.', ',') + 'k';
+    return String(n);
 }
-function route(){const h=location.hash.slice(1);window.scrollTo(0,0);if(h.startsWith('c-')){mq='';community(h.slice(2))}else home()}
-addEventListener('hashchange',route);
-function rerender(){route()}
-function dl(id){const m=mods.find(x=>x.id===id),u=safeUrl(m&&m.url);if(!u)return toast('Este mod ainda não tem link de download.');m.dl++;save();window.open(u,'_blank','noopener');rerenderKeep()}
-function rerenderKeep(){const h=location.hash.slice(1);if(h.startsWith('c-'))community(h.slice(2));else home()}
-function vote(id,t){const m=mods.find(x=>x.id===id),p=votes[id];if(!m||p===t)return;if(p)m[p]=Math.max(0,m[p]-1);m[t]++;votes[id]=t;save();sv('mx2_votes',votes);rerenderKeep()}
-function openOv(id){$(id).classList.add('open')}
-function closeOv(){document.querySelectorAll('.ov').forEach(o=>o.classList.remove('open'))}
-function fillGames(){$('mGame').innerHTML=coms.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('')}
-function openMod(id){if(!coms.length)return toast('Crie uma comunidade (jogo) primeiro.');editing=id||null;const m=id?mods.find(x=>x.id===id):{};fillGames();const h=location.hash.slice(3);$('mTitle').textContent=id?'Editar Mod':'Postar Mod';$('mName').value=m.name||'';$('mGame').value=m.game||(coms.some(c=>c.id===h)?h:coms[0].id);$('mCat').value=m.cat||'Texturas';$('mVer').value=m.ver||'';$('mSize').value=m.size||'';$('mUrl').value=m.url||'';$('mImg').value=m.img||'';$('mDesc').value=m.desc||'';openOv('modOv')}
-function saveMod(){const name=$('mName').value.trim();if(!name)return toast('Preencha o nome do mod.');const url=$('mUrl').value.trim(),img=$('mImg').value.trim();if((url&&!safeUrl(url))||(img&&!safeUrl(img)))return toast('Links inválidos (http, https ou caminho do site).');
- const d={name,game:$('mGame').value,cat:$('mCat').value,ver:$('mVer').value.trim(),size:$('mSize').value.trim(),url,img,desc:$('mDesc').value.trim()};
- if(editing)Object.assign(mods.find(x=>x.id===editing),d);else mods.push({id:Date.now(),dl:0,ok:0,old:0,at:Date.now(),...d});
- save();closeOv();rerenderKeep();toast('Mod salvo!')}
-function del(id){if(!confirm('Apagar este mod?'))return;mods=mods.filter(x=>x.id!==id);save();rerenderKeep()}
-function delCom(id){const c=coms.find(x=>x.id===id);if(!c)return;const n=mods.filter(m=>m.game===id).length;if(!confirm('Apagar a comunidade "'+c.name+'"'+(n?' e os '+n+' mods dentro dela':'')+'?'))return;coms=coms.filter(x=>x.id!==id);mods=mods.filter(m=>m.game!==id);save();if(location.hash)location.hash='';else home();toast('Comunidade apagada.')}
-function saveCom(){const name=$('cName').value.trim();if(!name)return toast('Preencha o nome do jogo.');let id=slug(name);if(coms.some(c=>c.id===id))return toast('Essa comunidade já existe.');const img=$('cImg').value.trim();if(img&&!safeUrl(img))return toast('Link da imagem inválido.');
- coms.push({id,name,icon:$('cIcon').value.trim()||'🎮',img,at:Date.now()});save();closeOv();$('cName').value='';$('cIcon').value='';$('cImg').value='';home();toast('Comunidade criada!')}
-function toggleAdmin(){if(isAdmin)isAdmin=false;else{const p=prompt('Senha de administrador:');if(p!==CFG.adminPass)return toast('Senha incorreta.');isAdmin=true}document.body.classList.toggle('admin',isAdmin);$('admBtn').textContent=isAdmin?'👑 Sair do admin':'→ Entrar'}
-function exportData(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({coms,mods},null,2)],{type:'application/json'}));a.download='modsexec-backup.json';a.click()}
-$('imp').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.mods)||!Array.isArray(d.coms))throw 0;mods=d.mods;coms=d.coms;save();route();toast('Importado!')}catch(x){toast('Arquivo inválido.')}};r.readAsText(f)});
-async function copyPix(){try{await navigator.clipboard.writeText(CFG.pix);toast('Chave Pix copiada!')}catch(e){toast('Chave Pix: '+CFG.pix)}}
-document.querySelectorAll('.ov').forEach(o=>o.addEventListener('mousedown',e=>{if(e.target===o)closeOv()}));
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeOv()});
-$('lDc').href=CFG.discord;$('lYt').href=CFG.youtube;$('pix').textContent=CFG.pix;$('yr').textContent=new Date().getFullYear();
-route();
+
+function timeAgo(ts) {
+    const s = Math.floor((Date.now() - ts) / 1000);
+    if (s < 60) return 'agora há pouco';
+    if (s < 3600) return Math.floor(s / 60) + 'm atrás';
+    if (s < 86400) return Math.floor(s / 3600) + 'h atrás';
+    return Math.floor(s / 86400) + 'd atrás';
+}
+
+function updateStats() {
+    $('statModsCount').textContent = mods.length;
+    $('statGamesCount').textContent = games.length;
+    const totalDl = mods.reduce((sum, m) => sum + (m.dl || 0), 0);
+    $('statDownloadsCount').textContent = fmtNumber(totalDl);
+}
+
+/* ===================== TOAST NOTIFICATION ===================== */
+let toastTimer = null;
+function showToast(msg) {
+    const t = $('toast');
+    t.textContent = msg;
+    t.style.display = 'block';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { t.style.display = 'none'; }, 2800);
+}
+
+/* ===================== RENDER DOS FILTROS ===================== */
+function renderFilters() {
+    // Linha de Jogos
+    let gHtml = `<button class="pill ${selectedGame === 'todos' ? 'active' : ''}" onclick="filterGame('todos')">🎮 Todos os Jogos</button>`;
+    games.forEach(g => {
+        gHtml += `<button class="pill ${selectedGame === g.id ? 'active' : ''}" onclick="filterGame('${g.id}')">${g.icon} ${esc(g.name)}</button>`;
+    });
+    $('gameFilterRow').innerHTML = gHtml;
+
+    // Linha de Categorias
+    let cHtml = '';
+    CATEGORIES.forEach(c => {
+        cHtml += `<button class="pill ${selectedCategory === c ? 'active' : ''}" onclick="filterCategory('${c}')">${esc(c)}</button>`;
+    });
+    $('categoryFilterRow').innerHTML = cHtml;
+
+    // Select de Jogos no Modal de Adicionar/Editar
+    $('formModGame').innerHTML = games.map(g => `<option value="${esc(g.id)}">${g.icon} ${esc(g.name)}</option>`).join('');
+}
+
+function filterGame(id) {
+    selectedGame = id;
+    renderFilters();
+    renderMods();
+    if (currentSection !== 'mods') navigate('mods');
+}
+
+function filterCategory(cat) {
+    selectedCategory = cat;
+    renderFilters();
+    renderMods();
+    if (currentSection !== 'mods') navigate('mods');
+}
+
+function onSearch() {
+    const input = $('searchInput');
+    searchQuery = input.value.trim().toLowerCase();
+    $('searchClearBtn').style.display = searchQuery ? 'flex' : 'none';
+    renderMods();
+}
+
+function clearSearch() {
+    $('searchInput').value = '';
+    searchQuery = '';
+    $('searchClearBtn').style.display = 'none';
+    renderMods();
+    $('searchInput').focus();
+}
+
+function onSortChange(val) {
+    currentSort = val;
+    renderMods();
+}
+
+/* ===================== RENDERIZAÇÃO DA LISTA DE MODS ===================== */
+function renderMods() {
+    let list = mods.filter(m => {
+        // Filtro por jogo
+        if (selectedGame !== 'todos' && m.game !== selectedGame) return false;
+        // Filtro por categoria
+        if (selectedCategory !== 'Todas' && m.cat !== selectedCategory) return false;
+        // Filtro por busca
+        if (searchQuery) {
+            const gameObj = games.find(g => g.id === m.game);
+            const gameName = gameObj ? gameObj.name.toLowerCase() : '';
+            const match = m.name.toLowerCase().includes(searchQuery) ||
+                          m.cat.toLowerCase().includes(searchQuery) ||
+                          gameName.includes(searchQuery) ||
+                          (m.desc && m.desc.toLowerCase().includes(searchQuery));
+            if (!match) return false;
+        }
+        return true;
+    });
+
+    // Ordenação
+    list.sort((a, b) => {
+        if (currentSort === 'dl') return (b.dl || 0) - (a.dl || 0);
+        if (currentSort === 'new') return (b.at || 0) - (a.at || 0);
+        if (currentSort === 'votes') return ((b.ok || 0) - (b.old || 0)) - ((a.ok || 0) - (a.old || 0));
+        if (currentSort === 'az') return a.name.localeCompare(b.name);
+        return 0;
+    });
+
+    const container = $('modsList');
+    if (!list.length) {
+        container.innerHTML = `<div class="empty-state">
+            <div style="font-size:36px; margin-bottom:8px;">🔍</div>
+            <div style="font-size:16px; font-weight:700; margin-bottom:4px;">Nenhum mod encontrado</div>
+            <div style="font-size:13.5px; color:var(--text-faint);">Tente buscar por outro termo ou escolha outra categoria/jogo.</div>
+        </div>`;
+        return;
+    }
+
+    container.innerHTML = list.map(m => {
+        const gameObj = games.find(g => g.id === m.game) || { name: 'Outros', icon: '🎮' };
+        const myVote = votes[m.id];
+        const iconStyle = m.img ? `background-image:url('${esc(m.img)}')` : '';
+
+        return `
+        <div class="mod-card ${m.featured ? 'featured-card' : ''}">
+            <div class="mod-main">
+                <div class="mod-info-group">
+                    <div class="mod-icon" style="${iconStyle}">
+                        ${m.img ? '' : gameObj.icon}
+                    </div>
+                    <div class="mod-details">
+                        <div class="mod-title-row">
+                            <h4 class="mod-title">${esc(m.name)}</h4>
+                            ${m.featured ? `<span class="badge-recommended">⭐ Recomendado pelo Dono</span>` : ''}
+                            <span class="badge-platform">${esc(m.platform || 'PC')}</span>
+                        </div>
+                        <p class="mod-desc-short">${esc(m.desc || 'Sem descrição informada.')}</p>
+                        <div class="mod-meta-row">
+                            <span class="mod-tag game-tag">${gameObj.icon} ${esc(gameObj.name)}</span>
+                            <span class="mod-tag cat-tag">${esc(m.cat)}</span>
+                            <span>v${esc(m.ver || '1.0')}</span>
+                            <span>💾 ${esc(m.size || '—')}</span>
+                            <span>⬇️ ${fmtNumber(m.dl || 0)}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mod-actions">
+                    <button class="vote-btn ${myVote === 'ok' ? 'voted-ok' : ''}" onclick="voteMod(${m.id}, 'ok')">
+                        👍 ${m.ok || 0}
+                    </button>
+                    <button class="vote-btn ${myVote === 'old' ? 'voted-old' : ''}" onclick="voteMod(${m.id}, 'old')">
+                        👎 ${m.old || 0}
+                    </button>
+                    <button class="btn btn-outline btn-sm" onclick="openDetailModal(${m.id})">
+                        📖 Detalhes
+                    </button>
+                    <button class="btn btn-primary btn-sm" onclick="downloadMod(${m.id})">
+                        ⬇️ Baixar
+                    </button>
+                    ${isAdmin ? `
+                        <button class="btn btn-outline btn-sm" onclick="openModModal(${m.id})" title="Editar mod">✏️</button>
+                        <button class="btn btn-delete btn-sm" onclick="deleteMod(${m.id})" title="Apagar mod">🗑️</button>
+                    ` : ''}
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+let gameSearchQuery = '';
+
+function onGameSearch() {
+    const input = $('gameSearchInput');
+    gameSearchQuery = input.value.trim().toLowerCase();
+    $('gameSearchClearBtn').style.display = gameSearchQuery ? 'flex' : 'none';
+    renderGames();
+}
+
+function clearGameSearch() {
+    $('gameSearchInput').value = '';
+    gameSearchQuery = '';
+    $('gameSearchClearBtn').style.display = 'none';
+    renderGames();
+    $('gameSearchInput').focus();
+}
+
+function openCommunity(id) {
+    selectedGame = id;
+    selectedCategory = 'Todas';
+    searchQuery = '';
+    if ($('searchInput')) $('searchInput').value = '';
+    const g = games.find(x => x.id === id);
+    const gName = g ? `${g.icon} ${g.name}` : 'Comunidade';
+    $('listTitle').innerHTML = `
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <button class="btn btn-outline btn-sm" onclick="navigate('games')" style="cursor:pointer;">← Voltar para Jogos</button>
+            <span><i>🎮</i> Mods de ${esc(gName)}</span>
+        </div>
+    `;
+    currentSection = 'mods';
+    if ($('tabGamesBtn')) $('tabGamesBtn').classList.remove('active');
+    $('gamesView').style.display = 'none';
+    $('modsView').style.display = 'block';
+    $('muralView').style.display = 'none';
+    renderFilters();
+    renderMods();
+    window.scrollTo({ top: $('modsView').offsetTop - 20, behavior: 'smooth' });
+}
+
+/* ===================== RENDERIZAÇÃO DA GRADE DE JOGOS ===================== */
+function renderGames() {
+    const container = $('gamesGrid');
+    const filteredGames = games.filter(g => !gameSearchQuery || g.name.toLowerCase().includes(gameSearchQuery));
+
+    if (!filteredGames.length) {
+        container.innerHTML = `<div class="empty-state" style="grid-column: 1 / -1;">
+            <div style="font-size:36px; margin-bottom:8px;">🔍</div>
+            <div style="font-size:16px; font-weight:700; margin-bottom:4px;">Nenhum jogo encontrado com esse nome</div>
+            <div style="font-size:13.5px; color:var(--text-faint);">Tente buscar por outro termo ou adicione um novo jogo pelo botão do Admin.</div>
+        </div>`;
+        return;
+    }
+
+    container.innerHTML = filteredGames.map(g => {
+        const gameMods = mods.filter(m => m.game === g.id);
+        const modCount = gameMods.length;
+        const totalDl = gameMods.reduce((s, m) => s + (m.dl || 0), 0);
+
+        let bgStyle = '';
+        if (g.img) {
+            bgStyle = `background-image: linear-gradient(to top, rgba(10,14,20,0.92) 0%, rgba(10,14,20,0.3) 60%), url('${esc(g.img)}')`;
+        } else {
+            let h = 0;
+            for (const ch of g.name) h = (h * 31 + ch.charCodeAt(0)) % 360;
+            bgStyle = `background: linear-gradient(145deg, hsl(${h}, 65%, 28%), hsl(${(h + 40) % 360}, 60%, 12%))`;
+        }
+
+        return `
+        <div class="game-card" onclick="openCommunity('${g.id}')">
+            ${isAdmin ? `<button class="game-delete-btn" onclick="event.stopPropagation(); deleteGame('${g.id}')">🗑️</button>` : ''}
+            <div class="game-cover" style="${bgStyle}">
+                ${g.img ? '' : `<span class="game-emoji">${g.icon}</span>`}
+                <b>${esc(g.name)}</b>
+            </div>
+            <div class="game-card-body">
+                <div class="game-stats">
+                    <span>📦 ${modCount} mods</span>
+                    <span>⬇️ ${fmtNumber(totalDl)}</span>
+                </div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+/* ===================== MURAL DA COMUNIDADE ===================== */
+function renderMural() {
+    const container = $('muralList');
+    if (!mural.length) {
+        container.innerHTML = `<div class="empty-state">Nenhum comentário publicado ainda. Seja o primeiro a postar!</div>`;
+        return;
+    }
+
+    container.innerHTML = mural.map(c => {
+        const initial = (c.author || 'G').charAt(0).toUpperCase();
+        return `
+        <div class="comment-card">
+            <div class="comment-avatar">${initial}</div>
+            <div class="comment-content">
+                <div class="comment-header">
+                    <div>
+                        <span class="comment-author">${esc(c.author)}</span>
+                        ${c.isOwner ? `<span class="badge-recommended" style="margin-left:6px;">Dono</span>` : ''}
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="comment-time">${timeAgo(c.at)}</span>
+                        ${isAdmin ? `<button class="btn btn-delete btn-sm" style="padding:2px 6px;" onclick="deleteComment(${c.id})">🗑️</button>` : ''}
+                    </div>
+                </div>
+                <div class="comment-text">${esc(c.text)}</div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function postComment() {
+    const authorInput = $('muralAuthor');
+    const textInput = $('muralText');
+    const author = authorInput.value.trim() || 'Gamer Anônimo';
+    const text = textInput.value.trim();
+
+    if (!text) return showToast('Escreva sua mensagem antes de enviar.');
+    if (text.length > 400) return showToast('Mensagem muito longa (máximo 400 caracteres).');
+
+    mural.unshift({
+        id: Date.now(),
+        author: author,
+        text: text,
+        at: Date.now(),
+        isOwner: isAdmin
+    });
+
+    saveStorage('mx_mural', mural);
+    textInput.value = '';
+    renderMural();
+    showToast('Comentário publicado no mural!');
+}
+
+function deleteComment(id) {
+    if (!confirm('Apagar esta mensagem do mural?')) return;
+    mural = mural.filter(c => c.id !== id);
+    saveStorage('mx_mural', mural);
+    renderMural();
+    showToast('Mensagem removida.');
+}
+
+/* ===================== VOTAÇÃO E DOWNLOAD ===================== */
+function voteMod(id, type) {
+    const mod = mods.find(m => m.id === id);
+    if (!mod) return;
+    const current = votes[id];
+
+    if (current === type) return; // já votou no mesmo
+
+    if (current) {
+        mod[current] = Math.max(0, (mod[current] || 0) - 1);
+    }
+    mod[type] = (mod[type] || 0) + 1;
+    votes[id] = type;
+
+    saveStorage('mx_votes', votes);
+    persistAll();
+    renderMods();
+    showToast(type === 'ok' ? 'Voto registrado: Funciona! 👍' : 'Voto registrado: Desatualizado! 👎');
+}
+
+/* ===================== BANCO INDEXEDDB PARA ARQUIVOS DO MOD ===================== */
+const IDB_NAME = 'ModsExecFilesDB';
+const IDB_STORE = 'modFiles';
+let currentUploadedFile = null;
+
+function openModFileDB() {
+    return new Promise((resolve, reject) => {
+        const req = indexedDB.open(IDB_NAME, 1);
+        req.onupgradeneeded = () => {
+            const db = req.result;
+            if (!db.objectStoreNames.contains(IDB_STORE)) {
+                db.createObjectStore(IDB_STORE);
+            }
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+    });
+}
+
+async function saveFileToDB(id, fileBlob, fileName) {
+    try {
+        const db = await openModFileDB();
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction(IDB_STORE, 'readwrite');
+            const store = tx.objectStore(IDB_STORE);
+            store.put({ blob: fileBlob, name: fileName }, String(id));
+            tx.oncomplete = () => resolve(true);
+            tx.onerror = () => reject(tx.error);
+        });
+    } catch(e) {
+        console.warn('Erro ao salvar no IndexedDB:', e);
+        return false;
+    }
+}
+
+async function getFileFromDB(id) {
+    try {
+        const db = await openModFileDB();
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction(IDB_STORE, 'readonly');
+            const store = tx.objectStore(IDB_STORE);
+            const req = store.get(String(id));
+            req.onsuccess = () => resolve(req.result || null);
+            req.onerror = () => reject(req.error);
+        });
+    } catch(e) {
+        return null;
+    }
+}
+
+async function deleteFileFromDB(id) {
+    try {
+        const db = await openModFileDB();
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction(IDB_STORE, 'readwrite');
+            const store = tx.objectStore(IDB_STORE);
+            store.delete(String(id));
+            tx.oncomplete = () => resolve(true);
+            tx.onerror = () => reject(tx.error);
+        });
+    } catch(e) {}
+}
+
+function formatBytes(bytes) {
+    if (!bytes || bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+}
+
+/* Converte links do Google Drive, Dropbox ou relativos para download direto automático */
+function getDirectDownloadUrl(url) {
+    if (!url) return '';
+    url = url.trim();
+
+    // Google Drive: converte para uc?export=download para download imediato
+    const gDriveMatch = url.match(/(?:file\/d\/|id=)([a-zA-Z0-9_-]{20,})/);
+    if (gDriveMatch && gDriveMatch[1]) {
+        return `https://drive.google.com/uc?export=download&id=${gDriveMatch[1]}`;
+    }
+
+    // Dropbox: muda dl=0 para dl=1 para baixar direto sem tela intermediária
+    if (url.includes('dropbox.com')) {
+        return url.replace(/[?&]dl=0/, '') + (url.includes('?') ? '&dl=1' : '?dl=1');
+    }
+
+    return url;
+}
+
+function handleModFileUpload(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    currentUploadedFile = file;
+    const sizeStr = formatBytes(file.size);
+    const statusEl = $('formModFileStatus');
+    statusEl.innerHTML = `<span style="color:var(--accent);">✅ Arquivo carregado: <b>${esc(file.name)}</b> (${sizeStr})</span>`;
+
+    // Preencher automaticamente o campo de tamanho
+    if (!$('formModSize').value.trim() || $('formModSize').value === '—') {
+        $('formModSize').value = sizeStr;
+    }
+
+    // Preencher automaticamente o nome do mod se estiver vazio
+    if (!$('formModName').value.trim()) {
+        const cleanName = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
+        $('formModName').value = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
+    }
+
+    showToast(`Arquivo "${file.name}" pronto para download automático!`);
+}
+
+async function downloadMod(id) {
+    const mod = mods.find(m => m.id === id);
+    if (!mod) return;
+
+    mod.dl = (mod.dl || 0) + 1;
+    persistAll();
+    renderMods();
+
+    const fileName = mod.fileName || (slug(mod.name) + (mod.fileExt || '.zip'));
+
+    // 1. Verificar se o arquivo foi enviado direto do computador (IndexedDB)
+    const dbFile = await getFileFromDB(mod.id);
+    if (dbFile && dbFile.blob) {
+        const downloadName = dbFile.name || fileName;
+        showToast('⚡ Baixando arquivo "' + downloadName + '" automaticamente...');
+        const blobUrl = URL.createObjectURL(dbFile.blob);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = downloadName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
+        return;
+    }
+
+    // 2. Se tiver link direto (Google Drive, Dropbox, /mods/..., GitHub, etc.)
+    if (mod.url) {
+        const directUrl = getDirectDownloadUrl(mod.url);
+        showToast('⚡ Baixando mod "' + fileName + '" automaticamente...');
+        const a = document.createElement('a');
+        a.href = directUrl;
+        a.setAttribute('download', fileName);
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        return;
+    }
+
+    // 3. Caso não tenha arquivo anexado ainda
+    openDetailModal(id);
+    showToast('Este mod ainda não possui arquivo anexado.');
+}
+
+/* ===================== MODAL DE DETALHES ===================== */
+function openDetailModal(id) {
+    const mod = mods.find(m => m.id === id);
+    if (!mod) return;
+    currentDetailMod = mod;
+
+    const gameObj = games.find(g => g.id === mod.game) || { name: 'Jogo', icon: '🎮' };
+
+    $('detailTitle').textContent = mod.name;
+    const iconEl = $('detailIcon');
+    if (mod.img) {
+        iconEl.textContent = '';
+        iconEl.style.backgroundImage = `url('${esc(mod.img)}')`;
+    } else {
+        iconEl.textContent = gameObj.icon;
+        iconEl.style.backgroundImage = '';
+    }
+
+    $('detailTags').innerHTML = `
+        <span class="mod-tag game-tag">${gameObj.icon} ${esc(gameObj.name)}</span>
+        <span class="mod-tag cat-tag">${esc(mod.cat)}</span>
+        <span class="badge-platform">${esc(mod.platform || 'PC')}</span>
+    `;
+
+    if (mod.req) {
+        $('detailReqBox').style.display = 'block';
+        $('detailReqText').textContent = mod.req;
+    } else {
+        $('detailReqBox').style.display = 'none';
+    }
+
+    $('detailDesc').textContent = mod.desc || 'Nenhum guia de instalação foi detalhado para este mod.';
+    $('detailFileInfo').textContent = `Versão: ${mod.ver || '1.0'} · Tamanho: ${mod.size || 'Desconhecido'} · ${fmtNumber(mod.dl || 0)} downloads`;
+
+    const dlBtn = $('detailDownloadBtn');
+    dlBtn.onclick = () => {
+        downloadMod(mod.id);
+    };
+
+    openModal('detailModal');
+}
+
+function copyDetailLink() {
+    if (!currentDetailMod) return;
+    const url = currentDetailMod.url || window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+        showToast('Link do mod copiado para a área de transferência!');
+    }).catch(() => {
+        showToast('Link: ' + url);
+    });
+}
+
+/* ===================== ADMIN: POSTAR / EDITAR MOD ===================== */
+function openModModal(id = null) {
+    editingModId = id;
+    currentUploadedFile = null;
+    $('formModFile').value = '';
+    renderFilters();
+
+    if (id) {
+        const m = mods.find(x => x.id === id);
+        if (!m) return;
+        $('modModalTitle').textContent = 'Editar Mod';
+        $('formModName').value = m.name || '';
+        $('formModGame').value = m.game || games[0].id;
+        $('formModCat').value = m.cat || 'Texturas & Shaders';
+        $('formModVer').value = m.ver || '';
+        $('formModSize').value = m.size || '';
+        $('formModPlatform').value = m.platform || 'PC (Windows)';
+        $('formModUrl').value = m.url || '';
+        $('formModImg').value = m.img || '';
+        $('formModReq').value = m.req || '';
+        $('formModDesc').value = m.desc || '';
+        $('formModFeatured').checked = !!m.featured;
+        $('formModFileStatus').innerHTML = m.fileName ?
+            `<span style="color:var(--accent);">📎 Arquivo atual anexado: <b>${esc(m.fileName)}</b></span>` :
+            'Nenhum arquivo do PC selecionado';
+    } else {
+        $('modModalTitle').textContent = 'Postar Novo Mod';
+        $('formModName').value = '';
+        $('formModGame').value = selectedGame !== 'todos' ? selectedGame : games[0].id;
+        $('formModCat').value = 'Texturas & Shaders';
+        $('formModVer').value = '';
+        $('formModSize').value = '';
+        $('formModPlatform').value = 'PC (Windows)';
+        $('formModUrl').value = '';
+        $('formModImg').value = '';
+        $('formModReq').value = '';
+        $('formModDesc').value = '';
+        $('formModFeatured').checked = false;
+        $('formModFileStatus').textContent = 'Nenhum arquivo do PC selecionado';
+    }
+
+    openModal('modModal');
+}
+
+async function saveMod() {
+    const name = $('formModName').value.trim();
+    if (!name) return showToast('Preencha o nome do mod.');
+
+    const targetId = editingModId || Date.now();
+    let fileName = '';
+    let fileExt = '.zip';
+
+    if (currentUploadedFile) {
+        fileName = currentUploadedFile.name;
+        fileExt = '.' + (fileName.split('.').pop() || 'zip');
+        await saveFileToDB(targetId, currentUploadedFile, fileName);
+    } else if (editingModId) {
+        const old = mods.find(x => x.id === editingModId);
+        if (old) {
+            fileName = old.fileName || '';
+            fileExt = old.fileExt || '.zip';
+        }
+    }
+
+    const data = {
+        name,
+        game: $('formModGame').value,
+        cat: $('formModCat').value,
+        ver: $('formModVer').value.trim() || '1.0',
+        size: $('formModSize').value.trim() || (currentUploadedFile ? formatBytes(currentUploadedFile.size) : '—'),
+        platform: $('formModPlatform').value,
+        url: $('formModUrl').value.trim(),
+        fileName: fileName,
+        fileExt: fileExt,
+        img: $('formModImg').value.trim(),
+        req: $('formModReq').value.trim(),
+        desc: $('formModDesc').value.trim(),
+        featured: $('formModFeatured').checked
+    };
+
+    if (editingModId) {
+        const idx = mods.findIndex(x => x.id === editingModId);
+        if (idx !== -1) {
+            mods[idx] = { ...mods[idx], ...data };
+        }
+    } else {
+        mods.unshift({
+            id: targetId,
+            dl: 0,
+            ok: 0,
+            old: 0,
+            at: Date.now(),
+            ...data
+        });
+    }
+
+    currentUploadedFile = null;
+    persistAll();
+    closeModals();
+    renderMods();
+    showToast(editingModId ? 'Mod atualizado com sucesso!' : 'Novo mod postado! O arquivo baixará automaticamente.');
+}
+
+async function deleteMod(id) {
+    if (!confirm('Deseja realmente apagar este mod da biblioteca?')) return;
+    await deleteFileFromDB(id);
+    mods = mods.filter(x => x.id !== id);
+    persistAll();
+    renderMods();
+    showToast('Mod removido.');
+}
+
+/* ===================== ADMIN: JOGOS ===================== */
+function saveGame() {
+    const name = $('formGameName').value.trim();
+    if (!name) return showToast('Digite o nome do jogo.');
+
+    const id = slug(name);
+    if (games.some(g => g.id === id)) return showToast('Esse jogo já existe na biblioteca.');
+
+    const icon = $('formGameIcon').value.trim() || '🎮';
+    const img = $('formGameImg').value.trim();
+
+    games.push({ id, name, icon, img });
+    persistAll();
+    closeModals();
+    renderFilters();
+    renderGames();
+    showToast('Comunidade do jogo criada!');
+}
+
+function deleteGame(id) {
+    const g = games.find(x => x.id === id);
+    if (!g) return;
+    const count = mods.filter(m => m.game === id).length;
+    if (!confirm(`Apagar o jogo "${g.name}" e os ${count} mods associados a ele?`)) return;
+
+    games = games.filter(x => x.id !== id);
+    mods = mods.filter(m => m.game !== id);
+    persistAll();
+    renderFilters();
+    renderGames();
+    renderMods();
+    showToast('Jogo e mods removidos.');
+}
+
+/* ===================== ADMIN TOGGLE & AUTH ===================== */
+function toggleAdminPrompt() {
+    if (isAdmin) {
+        isAdmin = false;
+        sessionStorage.setItem('mx_isAdmin', 'false');
+        document.body.classList.remove('admin-mode');
+        $('adminToggleBtn').textContent = '👑 Entrar';
+        renderMods();
+        renderGames();
+        renderMural();
+        showToast('Modo administrador desativado.');
+    } else {
+        const pass = prompt('Digite a senha de administrador:');
+        if (pass === null) return;
+        if (pass === CFG.adminPass) {
+            isAdmin = true;
+            sessionStorage.setItem('mx_isAdmin', 'true');
+            document.body.classList.add('admin-mode');
+            $('adminToggleBtn').textContent = '👑 Sair do Admin';
+            renderMods();
+            renderGames();
+            renderMural();
+            showToast('Modo administrador ativado com sucesso!');
+        } else {
+            showToast('Senha de administrador incorreta.');
+        }
+    }
+}
+
+/* ===================== BACKUP & RESTAURAÇÃO ===================== */
+function exportData() {
+    const backup = { games, mods, mural, exportedAt: new Date().toISOString() };
+    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `mods-exec-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    showToast('Backup exportado com sucesso!');
+}
+
+function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+        try {
+            const data = JSON.parse(reader.result);
+            if (!Array.isArray(data.mods) || !Array.isArray(data.games)) throw new Error();
+            games = data.games;
+            mods = data.mods;
+            if (Array.isArray(data.mural)) mural = data.mural;
+            persistAll();
+            renderFilters();
+            renderGames();
+            renderMods();
+            renderMural();
+            showToast('Dados e mods importados com sucesso!');
+        } catch (e) {
+            showToast('Erro ao importar arquivo JSON de backup inválido.');
+        }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+}
+
+/* ===================== CONTROLE DE NAVEGAÇÃO ===================== */
+function navigate(section) {
+    currentSection = section;
+    if ($('tabGamesBtn')) $('tabGamesBtn').classList.toggle('active', section === 'games');
+    if ($('tabTrendingBtn')) $('tabTrendingBtn').classList.toggle('active', section === 'trending');
+    if ($('tabMuralBtn')) $('tabMuralBtn').classList.toggle('active', section === 'mural');
+
+    $('gamesView').style.display = (section === 'games') ? 'block' : 'none';
+    $('modsView').style.display = (section === 'mods' || section === 'trending') ? 'block' : 'none';
+    $('muralView').style.display = (section === 'mural') ? 'block' : 'none';
+
+    if (section === 'games') {
+        renderGames();
+    } else if (section === 'trending') {
+        $('sortSelect').value = 'dl';
+        currentSort = 'dl';
+        selectedGame = 'todos';
+        $('listTitle').innerHTML = '<i>🔥</i> Mods Mais Populares & Em Alta';
+        renderFilters();
+        renderMods();
+    } else if (section === 'mods') {
+        renderFilters();
+        renderMods();
+    } else if (section === 'mural') {
+        renderMural();
+    }
+}
+
+/* ===================== CONTROLE DE MODAIS ===================== */
+function openModal(id) { $(id).classList.add('open'); }
+function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open')); }
+
+document.querySelectorAll('.modal-overlay').forEach(ov => {
+    ov.addEventListener('mousedown', e => { if (e.target === ov) closeModals(); });
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModals(); });
+
+/* ===================== PIX COPY ===================== */
+function copyPixKey() {
+    navigator.clipboard.writeText(CFG.pix).then(() => {
+        showToast('Chave Pix copiada com sucesso!');
+    }).catch(() => {
+        showToast('Chave Pix: ' + CFG.pix);
+    });
+}
+
+/* ===================== FUNDO ANIMADO (LOW-POLY CANVAS) ===================== */
+(function initCanvas() {
+    const canvas = document.getElementById('bg-canvas');
+    if (!canvas || !canvas.getContext) return;
+    const ctx = canvas.getContext('2d');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let width, height, points = [], triangles = [];
+    const gap = 135;
+
+    function resize() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        initPoints();
+        if (reduceMotion) drawStatic();
+    }
+
+    function initPoints() {
+        points = [];
+        triangles = [];
+        const cols = Math.ceil(width / gap) + 2;
+        const rows = Math.ceil(height / gap) + 2;
+
+        for (let i = 0; i < cols; i++) {
+            for (let j = 0; j < rows; j++) {
+                points.push({
+                    x: i * gap - gap / 2 + (Math.random() - 0.5) * gap * 0.8,
+                    y: j * gap - gap / 2 + (Math.random() - 0.5) * gap * 0.8,
+                    baseX: i * gap - gap / 2,
+                    baseY: j * gap - gap / 2,
+                    vx: (Math.random() - 0.5) * 0.22,
+                    vy: (Math.random() - 0.5) * 0.22
+                });
+            }
+        }
+
+        for (let i = 0; i < cols - 1; i++) {
+            for (let j = 0; j < rows - 1; j++) {
+                const p1 = points[i * rows + j];
+                const p2 = points[(i + 1) * rows + j];
+                const p3 = points[i * rows + j + 1];
+                const p4 = points[(i + 1) * rows + j + 1];
+                if (Math.random() > 0.5) {
+                    triangles.push([p1, p2, p3]);
+                    triangles.push([p2, p4, p3]);
+                } else {
+                    triangles.push([p1, p2, p4]);
+                    triangles.push([p1, p4, p3]);
+                }
+            }
+        }
+    }
+
+    function paint(lx, ly) {
+        ctx.fillStyle = '#06090e';
+        ctx.fillRect(0, 0, width, height);
+
+        triangles.forEach(t => {
+            const cx = (t[0].x + t[1].x + t[2].x) / 3;
+            const cy = (t[0].y + t[1].y + t[2].y) / 3;
+            const dx = cx - lx, dy = cy - ly;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const intensity = Math.max(0, 1 - dist / 600);
+
+            // Cores verde esmeralda / azul ciano gamer
+            const r = Math.floor(8 + intensity * 20);
+            const g = Math.floor(14 + intensity * 42);
+            const b = Math.floor(22 + intensity * 48);
+
+            ctx.beginPath();
+            ctx.moveTo(t[0].x, t[0].y);
+            ctx.lineTo(t[1].x, t[1].y);
+            ctx.lineTo(t[2].x, t[2].y);
+            ctx.closePath();
+
+            ctx.fillStyle = `rgb(${r},${g},${b})`;
+            ctx.strokeStyle = `rgba(${r},${g},${b},0.22)`;
+            ctx.lineWidth = 1;
+            ctx.fill();
+            ctx.stroke();
+        });
+    }
+
+    function drawStatic() { paint(width / 2, height / 2); }
+
+    let time = 0, animating = true;
+    function loop() {
+        if (!animating) return;
+        time += 0.003;
+        const lx = width / 2 + Math.cos(time) * width * 0.38;
+        const ly = height / 2 + Math.sin(time * 0.7) * height * 0.38;
+
+        points.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            if (Math.abs(p.x - p.baseX) > gap * 0.5) p.vx *= -1;
+            if (Math.abs(p.y - p.baseY) > gap * 0.5) p.vy *= -1;
+        });
+
+        paint(lx, ly);
+        requestAnimationFrame(loop);
+    }
+
+    document.addEventListener('visibilitychange', () => {
+        animating = !document.hidden && !reduceMotion;
+        if (animating) requestAnimationFrame(loop);
+    });
+
+    window.addEventListener('resize', resize);
+    resize();
+    if (!reduceMotion) loop();
+})();
+
+/* ===================== INICIALIZAÇÃO DA PÁGINA ===================== */
+window.addEventListener('DOMContentLoaded', () => {
+    $('yearSpan').textContent = new Date().getFullYear();
+    $('headerDiscordLink').href = CFG.discord;
+    $('bannerDiscordLink').href = CFG.discord;
+    $('headerYtLink').href = CFG.youtube;
+    $('pixKeyText').textContent = CFG.pix;
+
+    if (isAdmin) {
+        document.body.classList.add('admin-mode');
+        $('adminToggleBtn').textContent = '👑 Sair do Admin';
+    }
+
+    updateStats();
+    renderFilters();
+    navigate('games');
+});
 </script>
 </body>
 </html>
