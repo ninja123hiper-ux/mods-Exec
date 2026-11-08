@@ -1142,6 +1142,7 @@
             .form-row { flex-direction: column; gap: 0; }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -1172,6 +1173,7 @@
             <button class="btn btn-pix" onclick="openModal('pixModal')">💛 Doar via Pix</button>
             <a class="btn btn-discord" id="headerDiscordLink" href="https://discord.gg/yXw4pxZG6" target="_blank" rel="noopener noreferrer">💬 Discord</a>
             <a class="btn btn-youtube" id="headerYtLink" href="https://www.youtube.com/@seucanal" target="_blank" rel="noopener noreferrer">📺 YouTube</a>
+            <button class="btn btn-outline" id="supabaseBtn" onclick="openSupabaseModal()" style="display:none;">⚡ Supabase</button>
             <button class="btn btn-primary" id="adminToggleBtn" onclick="toggleAdminPrompt()">👑 Entrar</button>
         </div>
     </header>
@@ -1479,6 +1481,40 @@
     </div>
 </div>
 
+
+<!-- Modal: Conexão Supabase -->
+<div class="modal-overlay" id="supabaseModal">
+    <div class="modal modal-wide">
+        <h2>⚡ Conectar ao Supabase</h2>
+        <p style="color:var(--text-muted); font-size:14px; margin-top:-6px;">
+            Conecte seu banco de dados e armazenamento do Supabase para que todos os mods, jogos e arquivos fiquem sincronizados na nuvem em tempo real, <b>sem precisar atualizar o GitHub toda hora!</b>
+        </p>
+
+        <div class="form-group">
+            <label>URL do Projeto Supabase (Project URL)</label>
+            <input type="url" id="sbFormUrl" placeholder="https://atcdtynmenzsdcssekx.supabase.co">
+        </div>
+
+        <div class="form-group">
+            <label>Chave Anon Pública (anon / public key)</label>
+            <input type="password" id="sbFormKey" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
+            <small style="color:var(--text-muted); font-size:12px; margin-top:4px; display:block;">
+                Encontre no painel do Supabase em: <b>Project Settings (ícone de engrenagem) ➔ API ➔ Project API Keys (chave 'anon' ou 'public')</b>.
+            </small>
+        </div>
+
+        <div id="sbStatusText" style="padding:10px 14px; border-radius:8px; margin:14px 0; font-size:13px; font-weight:600; display:none;"></div>
+
+        <div class="modal-actions" style="justify-content:space-between; flex-wrap:wrap; gap:10px;">
+            <button class="btn btn-outline" onclick="pushAllToSupabase()" id="btnMigrateSupabase" style="display:none;">☁️ Enviar Mods Locais pro Supabase</button>
+            <div style="display:flex; gap:8px;">
+                <button class="btn btn-outline" onclick="closeModals()">Fechar</button>
+                <button class="btn btn-primary" onclick="saveAndConnectSupabase()">⚡ Conectar e Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Toast Notifier -->
 <div id="toast"></div>
 
@@ -1489,7 +1525,9 @@ const CFG = {
     discord: 'https://discord.gg/yXw4pxZG6',
     youtube: 'https://www.youtube.com/@seucanal',
     pix: 'rafael2008lz2@gmail.com',
-    adminPass: 'ninja919676' // Senha para habilitar o modo administrador
+    adminPass: 'ninja919676', // Senha para habilitar o modo administrador
+    supabaseUrl: 'https://btcdtynmonszckvsqekx.supabase.co', // URL oficial do seu Supabase
+    supabaseAnonKey: 'sb_publishable_JYMjc4S_GpmLXN1Omd60Qg_WBpvJtb0' // Chave anon pública (começa com eyJ...)
 };
 
 /* ===================== JOGOS PADRÃO (OFICIAIS) ===================== */
@@ -1670,6 +1708,144 @@ const DEFAULT_MODS = [
 const DEFAULT_COMMENTS = [
     { id: 1, author: 'Dono Mods Exec', text: 'Sejam bem-vindos ao Mods Exec! Adicionados os novos mods de MUCK e CRAB GAME.', at: Date.now() - 36e5, isOwner: true }
 ];
+
+
+/* ===================== SUPABASE CLIENT & SYNC ===================== */
+let sb = null;
+
+function initSupabase() {
+    const url = localStorage.getItem('mx_supabase_url') || CFG.supabaseUrl;
+    const key = localStorage.getItem('mx_supabase_key') || CFG.supabaseAnonKey;
+    if (window.supabase && url && key && (key.startsWith('eyJ') || key.startsWith('sb_publishable'))) {
+        try {
+            sb = window.supabase.createClient(url, key);
+            console.log('⚡ Supabase inicializado com sucesso:', url);
+            syncFromSupabase();
+            updateSbStatusUI(true, 'Conectado ao Supabase com sucesso!');
+            return true;
+        } catch (e) {
+            console.error('Falha ao conectar ao Supabase:', e);
+            updateSbStatusUI(false, 'Erro ao inicializar conexão: ' + e.message);
+            return false;
+        }
+    }
+    return false;
+}
+
+function updateSbStatusUI(connected, msg) {
+    const el = $('sbStatusText');
+    const migBtn = $('btnMigrateSupabase');
+    if (!el) return;
+    el.style.display = 'block';
+    if (connected) {
+        el.style.background = 'rgba(45, 230, 167, 0.15)';
+        el.style.border = '1px solid var(--accent)';
+        el.style.color = 'var(--accent)';
+        el.innerHTML = '✅ ' + msg;
+        if (migBtn) migBtn.style.display = 'inline-flex';
+    } else {
+        el.style.background = 'rgba(255, 93, 115, 0.15)';
+        el.style.border = '1px solid var(--danger)';
+        el.style.color = 'var(--danger)';
+        el.innerHTML = '⚠️ ' + msg;
+        if (migBtn) migBtn.style.display = 'none';
+    }
+}
+
+function openSupabaseModal() {
+    const urlInput = $('sbFormUrl');
+    const keyInput = $('sbFormKey');
+    if (urlInput) urlInput.value = localStorage.getItem('mx_supabase_url') || CFG.supabaseUrl || '';
+    if (keyInput) keyInput.value = localStorage.getItem('mx_supabase_key') || CFG.supabaseAnonKey || '';
+    
+    if (sb) {
+        updateSbStatusUI(true, 'Conectado ao Supabase!');
+    } else {
+        updateSbStatusUI(false, 'Aguardando chave Anon para conectar.');
+    }
+    openModal('supabaseModal');
+}
+
+async function saveAndConnectSupabase() {
+    const url = $('sbFormUrl').value.trim();
+    const key = $('sbFormKey').value.trim();
+    if (!url) return showToast('Digite a URL do seu projeto Supabase.');
+    if (!key) return showToast('Digite a chave anon do Supabase (começa com eyJ...).');
+
+    if (!(key.startsWith('eyJ') || key.startsWith('sb_publishable'))) {
+        return showToast('⚠️ Atenção: A chave anon deve ser um token JWT (começando com "eyJ...").');
+    }
+
+    localStorage.setItem('mx_supabase_url', url);
+    localStorage.setItem('mx_supabase_key', key);
+
+    try {
+        sb = window.supabase.createClient(url, key);
+        // Test query
+        const { data, error } = await sb.from('games').select('id').limit(1);
+        if (error) {
+            updateSbStatusUI(false, 'Conectou, mas tabela "games" retornou erro: ' + error.message + '. Lembre-se de rodar o script SQL no Supabase!');
+            showToast('⚠️ Verifique se executou o script SQL no Supabase.');
+        } else {
+            updateSbStatusUI(true, 'Conexão validada com sucesso! Sincronizando dados...');
+            showToast('✅ Supabase conectado com sucesso!');
+            await syncFromSupabase();
+        }
+    } catch (e) {
+        updateSbStatusUI(false, 'Erro: ' + e.message);
+        showToast('Erro ao conectar ao Supabase.');
+    }
+}
+
+async function syncFromSupabase() {
+    if (!sb) return;
+    try {
+        const { data: gData, error: gErr } = await sb.from('games').select('*').order('name');
+        if (!gErr && gData && gData.length > 0) {
+            games = gData;
+            saveStorage('mx_games', games);
+            renderGames();
+            renderFilters();
+        }
+
+        const { data: mData, error: mErr } = await sb.from('mods').select('*').order('id', { ascending: false });
+        if (!mErr && mData && mData.length > 0) {
+            mods = mData;
+            saveStorage('mx_mods', mods);
+            renderMods();
+            updateStats();
+        }
+
+        const { data: muData, error: muErr } = await sb.from('mural').select('*').order('id', { ascending: false });
+        if (!muErr && muData && muData.length > 0) {
+            mural = muData;
+            saveStorage('mx_mural', mural);
+            renderMural();
+        }
+    } catch (e) {
+        console.warn('Erro ao sincronizar dados do Supabase:', e);
+    }
+}
+
+async function pushAllToSupabase() {
+    if (!sb) return showToast('Conecte ao Supabase primeiro.');
+    showToast('☁️ Enviando jogos e mods para o Supabase...');
+    try {
+        // Enviar jogos
+        const { error: gErr } = await sb.from('games').upsert(games);
+        if (gErr) throw new Error('Jogos: ' + gErr.message);
+
+        // Enviar mods
+        const { error: mErr } = await sb.from('mods').upsert(mods);
+        if (mErr) throw new Error('Mods: ' + mErr.message);
+
+        showToast('🎉 Todos os ' + mods.length + ' mods foram salvos no Supabase com sucesso!');
+        updateSbStatusUI(true, 'Todos os dados locais foram sincronizados para o Supabase!');
+    } catch (e) {
+        showToast('Erro ao enviar dados: ' + e.message);
+        updateSbStatusUI(false, 'Erro no envio: ' + e.message);
+    }
+}
 
 /* ===================== ESTADO DA APLICAÇÃO ===================== */
 const $ = id => document.getElementById(id);
@@ -2318,6 +2494,28 @@ async function saveMod() {
         fileName = currentUploadedFile.name;
         fileExt = '.' + (fileName.split('.').pop() || 'zip');
         await saveFileToDB(targetId, currentUploadedFile, fileName);
+        
+        // Se Supabase estiver conectado, faz upload para o Storage da nuvem
+        if (sb) {
+            showToast('☁️ Enviando arquivo do mod para o Supabase Storage...');
+            const storagePath = `${targetId}_${slug(fileName.replace(fileExt, ''))}${fileExt}`;
+            try {
+                const { data: upRes, error: upErr } = await sb.storage
+                    .from('mods-files')
+                    .upload(storagePath, currentUploadedFile, { upsert: true });
+                if (!upErr) {
+                    const { data: pubData } = sb.storage.from('mods-files').getPublicUrl(storagePath);
+                    if (pubData && pubData.publicUrl) {
+                        data.url = pubData.publicUrl;
+                        showToast('✅ Arquivo salvo na nuvem com link direto!');
+                    }
+                } else {
+                    console.warn('Aviso Storage Supabase:', upErr.message);
+                }
+            } catch (err) {
+                console.warn('Falha upload Supabase Storage:', err);
+            }
+        }
     } else if (editingModId) {
         const old = mods.find(x => x.id === editingModId);
         if (old) {
@@ -2369,6 +2567,13 @@ async function deleteMod(id) {
     if (!confirm('Deseja realmente apagar este mod da biblioteca?')) return;
     await deleteFileFromDB(id);
     mods = mods.filter(x => x.id !== id);
+    if (sb) {
+        try {
+            await sb.from('mods').delete().eq('id', id);
+        } catch (e) {
+            console.warn('Erro ao deletar do Supabase:', e);
+        }
+    }
     persistAll();
     renderMods();
     showToast('Mod removido.');
@@ -2385,7 +2590,15 @@ function saveGame() {
     const icon = $('formGameIcon').value.trim() || '🎮';
     const img = $('formGameImg').value.trim();
 
-    games.push({ id, name, icon, img });
+    const newGame = { id, name, icon, img };
+    games.push(newGame);
+    if (sb) {
+        try {
+            await sb.from('games').upsert([newGame]);
+        } catch (e) {
+            console.warn('Erro ao salvar jogo no Supabase:', e);
+        }
+    }
     persistAll();
     closeModals();
     renderFilters();
@@ -2636,6 +2849,7 @@ function copyPixKey() {
 
 /* ===================== INICIALIZAÇÃO DA PÁGINA ===================== */
 window.addEventListener('DOMContentLoaded', () => {
+    initSupabase();
     $('yearSpan').textContent = new Date().getFullYear();
     $('headerDiscordLink').href = CFG.discord;
     $('bannerDiscordLink').href = CFG.discord;
