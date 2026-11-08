@@ -67,9 +67,10 @@
         }
 
         .container {
-            max-width: 1040px;
-            width: 100%;
-        }
+        max-width: 1480px;
+        width: 95%;
+        margin: 0 auto;
+    }
 
         a { color: inherit; text-decoration: none; }
         button, input, select, textarea { font-family: inherit; }
@@ -327,14 +328,18 @@
         /* ============== HERO BANNER ============== */
         .hero {
             position: relative;
-            background: var(--panel-bg);
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.88) 0%, rgba(10, 14, 20, 0.95) 100%);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
-            padding: 34px 28px;
-            margin-bottom: 20px;
+            padding: 58px 36px 48px;
+            margin-bottom: 26px;
             overflow: hidden;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.45);
+            box-shadow: 0 16px 45px rgba(0,0,0,0.5);
             animation: fadeInUp 0.45s var(--ease) 0.05s both;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .hero::before {
@@ -353,13 +358,18 @@
         .hero-content {
             position: relative;
             z-index: 1;
+            max-width: 880px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .hero h2 {
-            margin: 0 0 10px;
-            font-size: clamp(24px, 4vw, 36px);
+            margin: 0 0 12px;
+            font-size: clamp(32px, 4.5vw, 52px);
             font-weight: 900;
-            letter-spacing: -1px;
+            letter-spacing: -1.5px;
             line-height: 1.15;
         }
 
@@ -370,11 +380,11 @@
         }
 
         .hero p {
-            margin: 0 0 18px;
-            color: #cbd5e1;
-            font-size: 15px;
-            max-width: 680px;
-            line-height: 1.5;
+            margin: 0 auto 24px;
+            color: #94a3b8;
+            font-size: 16.5px;
+            max-width: 760px;
+            line-height: 1.6;
         }
 
         .hero p b { color: var(--accent); font-weight: 600; }
@@ -382,6 +392,7 @@
         .hero-stats-row {
             display: flex;
             gap: 14px;
+            justify-content: center;
             flex-wrap: wrap;
         }
 
@@ -455,12 +466,13 @@
 
         .search-bar {
             width: 100%;
-            padding: 14px 44px 14px 48px;
-            background-color: var(--panel-bg);
+            height: 52px;
+            background: rgba(15, 23, 42, 0.85);
             border: 1px solid var(--border);
             border-radius: 12px;
-            color: white;
-            font-size: 15px;
+            padding: 14px 48px 14px 50px;
+            color: var(--text-main);
+            font-size: 15.5px;
             transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
         }
 
@@ -775,10 +787,10 @@
 
         /* ============== COMUNIDADES (GRID DE JOGOS) ============== */
         .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 20px;
-        }
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 24px;
+    }
 
         .game-card {
             background: var(--panel-bg);
@@ -799,16 +811,16 @@
         }
 
         .game-cover {
-            aspect-ratio: 4/5;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 14px;
-            overflow: hidden;
-        }
+        aspect-ratio: 3 / 4;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 16px;
+        overflow: hidden;
+    }
 
         .game-cover::before {
             content: "";
@@ -845,7 +857,19 @@
             background: var(--panel-bg);
         }
 
-        .game-stats {
+        
+    .game-title {
+        display: block;
+        font-size: 16.5px;
+        font-weight: 800;
+        color: var(--text-main);
+        margin-bottom: 6px;
+        letter-spacing: -0.3px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .game-stats {
             display: flex;
             justify-content: space-between;
             font-size: 12.5px;
@@ -1191,9 +1215,19 @@
             .mod-main { flex-direction: column; align-items: stretch; }
             .mod-actions { width: 100%; justify-content: flex-start; }
             .mod-actions .btn { flex: 1; }
-            .games-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 14px; }
+            .games-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 24px;
+    }
             .hero { padding: 22px 18px; }
-            .hero h2 { font-size: 22px; }
+            .hero h2 {
+            margin: 0 0 12px;
+            font-size: clamp(32px, 4.5vw, 52px);
+            font-weight: 900;
+            letter-spacing: -1.5px;
+            line-height: 1.15;
+        }
             .form-row { flex-direction: column; gap: 0; }
         }
     </style>
@@ -2693,7 +2727,7 @@ let votes = loadStorage('mx_votes', {});
 let isAdmin = localStorage.getItem('mx_isAdmin') === 'true';
 
 let currentSection = 'games';
-let selectedGame = 'todos';
+let selectedGame = 'crab-game';
 let selectedCategory = 'Todas';
 let searchQuery = '';
 let currentSort = 'default';
@@ -2741,8 +2775,8 @@ function showToast(msg) {
 
 /* ===================== RENDER DOS FILTROS ===================== */
 function renderFilters() {
-    // Linha de Jogos
-    let gHtml = `<button class="pill ${selectedGame === 'todos' ? 'active' : ''}" onclick="filterGame('todos')">🎮 Todos os Jogos</button>`;
+    // Linha de Jogos (apenas os jogos reais, sem botão 'Todos os Jogos')
+    let gHtml = '';
     games.forEach(g => {
         gHtml += `<button class="pill ${selectedGame === g.id ? 'active' : ''}" onclick="filterGame('${g.id}')">${fixMojibake(g.icon)} ${esc(g.name)}</button>`;
     });
@@ -2965,9 +2999,9 @@ function renderGames() {
             ${isAdmin ? `<button class="game-delete-btn" onclick="event.stopPropagation(); deleteGame('${g.id}')">🗑️</button>` : ''}
             <div class="game-cover" style="${bgStyle}">
                 ${g.img ? '' : `<span class="game-emoji">${fixMojibake(g.icon)}</span>`}
-                <b>${esc(g.name)}</b>
             </div>
             <div class="game-card-body">
+                <b class="game-title">${esc(g.name)}</b>
                 <div class="game-stats">
                     <span>📦 ${modCount} mods</span>
                     <span>⬇️ ${fmtNumber(totalDl)}</span>
@@ -3554,7 +3588,7 @@ function navigate(section) {
     } else if (section === 'trending') {
         $('sortSelect').value = 'dl';
         currentSort = 'dl';
-        selectedGame = 'todos';
+        selectedGame = (games && games[0] ? games[0].id : 'crab-game');
         $('listTitle').innerHTML = '<i>🔥</i> Mods Mais Populares & Em Alta';
         renderFilters();
         renderMods();
