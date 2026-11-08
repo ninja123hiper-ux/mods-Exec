@@ -1665,6 +1665,36 @@
                 </div>
             </div>
 
+
+            <!-- Etapa Direta: Ao clicar no link do e-mail recebido -->
+            <div id="recoveryStepDirect" style="display:none;">
+                <div style="margin-bottom:16px;">
+                    <h3 style="margin:0 0 6px; font-size:17px; display:flex; align-items:center; gap:8px;">
+                        <span>🔑</span> Definir Nova Senha
+                    </h3>
+                    <p style="margin:0; font-size:13px; color:var(--text-muted); line-height:1.4;">
+                        Sua solicitação foi confirmada pelo e-mail com sucesso! Digite a sua nova senha abaixo para entrar.
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label>Criar Nova Senha (mínimo 6 caracteres) *</label>
+                    <input type="password" id="directNewPass" placeholder="••••••••" autocomplete="new-password">
+                </div>
+
+                <div class="form-group">
+                    <label>Confirmar Nova Senha *</label>
+                    <input type="password" id="directConfirmPass" placeholder="••••••••" autocomplete="new-password">
+                </div>
+
+                <div id="directResetError" style="color:var(--danger); font-size:13px; margin:10px 0; display:none; background:rgba(255,93,115,0.1); padding:8px 12px; border-radius:6px; border:1px solid var(--danger);"></div>
+                <div id="directResetSuccess" style="color:var(--accent); font-size:13px; margin:10px 0; display:none; background:rgba(45,230,167,0.1); padding:8px 12px; border-radius:6px; border:1px solid var(--accent);"></div>
+
+                <div class="modal-actions" style="margin-top:20px; justify-content:flex-end;">
+                    <button class="btn btn-primary" id="btnDirectResetSave" onclick="handleDirectPasswordReset()">🔒 Salvar Nova Senha e Entrar</button>
+                </div>
+            </div>
+
             <!-- Etapa 2: Digitar Código & Nova Senha -->
             <div id="recoveryStep2" style="display:none;">
                 <div style="margin-bottom:16px;">
@@ -2162,6 +2192,99 @@ function updateAdminUI() {
 /* ===================== RECUPERAÇÃO DE SENHA (CÓDIGO / OTP) ===================== */
 let pendingRecoveryEmail = '';
 
+
+function openDirectResetPassModal() {
+    openModal('authModal');
+    const tabLogin = $('authTabLogin');
+    const tabSignup = $('authTabSignup');
+    const formLogin = $('authLoginForm');
+    const formSignup = $('authSignupForm');
+    const formRecovery = $('authRecoveryForm');
+    const step1 = $('recoveryStep1');
+    const step2 = $('recoveryStep2');
+    const stepDirect = $('recoveryStepDirect');
+
+    if (tabLogin) tabLogin.style.display = 'none';
+    if (tabSignup) tabSignup.style.display = 'none';
+    if (formLogin) formLogin.style.display = 'none';
+    if (formSignup) formSignup.style.display = 'none';
+    if (formRecovery) formRecovery.style.display = 'block';
+    if (step1) step1.style.display = 'none';
+    if (step2) step2.style.display = 'none';
+    if (stepDirect) stepDirect.style.display = 'block';
+}
+
+async function handleDirectPasswordReset() {
+    if (!sb) return showToast('Supabase não conectado.');
+    const newPass = $('directNewPass') ? $('directNewPass').value : '';
+    const confirmPass = $('directConfirmPass') ? $('directConfirmPass').value : '';
+    const errEl = $('directResetError');
+    const succEl = $('directResetSuccess');
+    const btn = $('btnDirectResetSave');
+
+    if (errEl) errEl.style.display = 'none';
+    if (succEl) succEl.style.display = 'none';
+
+    if (!newPass || !confirmPass) {
+        if (errEl) {
+            errEl.textContent = 'Digite e confirme a nova senha.';
+            errEl.style.display = 'block';
+        }
+        return;
+    }
+    if (newPass.length < 6) {
+        if (errEl) {
+            errEl.textContent = 'A senha deve ter no mínimo 6 caracteres.';
+            errEl.style.display = 'block';
+        }
+        return;
+    }
+    if (newPass !== confirmPass) {
+        if (errEl) {
+            errEl.textContent = 'As senhas digitadas não coincidem.';
+            errEl.style.display = 'block';
+        }
+        return;
+    }
+
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Salvando senha...';
+    }
+
+    try {
+        const { data, error } = await sb.auth.updateUser({ password: newPass });
+        if (error) throw error;
+
+        if (succEl) {
+            succEl.textContent = '🎉 Senha redefinida com sucesso! Conectando...';
+            succEl.style.display = 'block';
+        }
+
+        setTimeout(async () => {
+            closeModals();
+            if (window.history && window.history.replaceState) {
+                window.history.replaceState(null, '', window.location.pathname);
+            }
+            if (data && data.user) {
+                await checkUserProfile(data.user);
+            }
+            showToast('✅ Senha alterada com sucesso! Você já está conectado.');
+        }, 1200);
+
+    } catch (err) {
+        if (errEl) {
+            errEl.textContent = err.message || 'Erro ao redefinir a senha.';
+            errEl.style.display = 'block';
+        }
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = '🔒 Salvar Nova Senha e Entrar';
+        }
+    }
+}
+
 function openRecoveryView(step = 1) {
     const tabLogin = $('authTabLogin');
     const tabSignup = $('authTabSignup');
@@ -2171,8 +2294,10 @@ function openRecoveryView(step = 1) {
     const step1 = $('recoveryStep1');
     const step2 = $('recoveryStep2');
 
-    if (tabLogin) tabLogin.classList.remove('active');
-    if (tabSignup) tabSignup.classList.remove('active');
+    if (tabLogin) { tabLogin.style.display = 'block'; tabLogin.classList.remove('active'); }
+    if (tabSignup) { tabSignup.style.display = 'block'; tabSignup.classList.remove('active'); }
+    const stepDirect = $('recoveryStepDirect');
+    if (stepDirect) stepDirect.style.display = 'none';
     if (formLogin) formLogin.style.display = 'none';
     if (formSignup) formSignup.style.display = 'none';
     if (formRecovery) formRecovery.style.display = 'block';
@@ -2227,7 +2352,13 @@ async function handleSendRecoveryCode(isResend = false) {
     }
 
     try {
-        const { error } = await sb.auth.resetPasswordForEmail(email);
+        const redirectUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? 'https://mods-exc.vercel.app/'
+            : window.location.origin + window.location.pathname;
+
+        const { error } = await sb.auth.resetPasswordForEmail(email, {
+            redirectTo: redirectUrl
+        });
         if (error) throw error;
 
         pendingRecoveryEmail = email;
@@ -2354,7 +2485,16 @@ function initSupabase() {
             });
 
             // Monitorar login / logout em tempo real
+            // Failsafe: se a URL contiver type=recovery (link do e-mail do Supabase)
+            if (window.location.hash.includes('type=recovery') || window.location.search.includes('type=recovery')) {
+                setTimeout(openDirectResetPassModal, 400);
+            }
+
             sb.auth.onAuthStateChange(async (event, session) => {
+                if (event === 'PASSWORD_RECOVERY') {
+                    openDirectResetPassModal();
+                    return;
+                }
                 if (session && session.user) {
                     await checkUserProfile(session.user);
                 } else {
@@ -2566,7 +2706,7 @@ function renderFilters() {
     // Linha de Jogos
     let gHtml = `<button class="pill ${selectedGame === 'todos' ? 'active' : ''}" onclick="filterGame('todos')">🎮 Todos os Jogos</button>`;
     games.forEach(g => {
-        gHtml += `<button class="pill ${selectedGame === g.id ? 'active' : ''}" onclick="filterGame('${g.id}')">${g.icon} ${esc(g.name)}</button>`;
+        gHtml += `<button class="pill ${selectedGame === g.id ? 'active' : ''}" onclick="filterGame('${g.id}')">${fixMojibake(g.icon)} ${esc(g.name)}</button>`;
     });
     $('gameFilterRow').innerHTML = gHtml;
 
@@ -2578,7 +2718,7 @@ function renderFilters() {
     $('categoryFilterRow').innerHTML = cHtml;
 
     // Select de Jogos no Modal de Adicionar/Editar
-    $('formModGame').innerHTML = games.map(g => `<option value="${esc(g.id)}">${g.icon} ${esc(g.name)}</option>`).join('');
+    $('formModGame').innerHTML = games.map(g => `<option value="${esc(g.id)}">${fixMojibake(g.icon)} ${esc(g.name)}</option>`).join('');
 }
 
 function filterGame(id) {
@@ -2729,7 +2869,7 @@ function openCommunity(id) {
     searchQuery = '';
     if ($('searchInput')) $('searchInput').value = '';
     const g = games.find(x => x.id === id);
-    const gName = g ? `${g.icon} ${g.name}` : 'Comunidade';
+    const gName = g ? `${fixMojibake(g.icon)} ${g.name}` : 'Comunidade';
     $('listTitle').innerHTML = `
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
             <button class="btn btn-outline btn-sm" onclick="navigate('games')" style="cursor:pointer;">← Voltar para Jogos</button>
@@ -2778,7 +2918,7 @@ function renderGames() {
         <div class="game-card" onclick="openCommunity('${g.id}')">
             ${isAdmin ? `<button class="game-delete-btn" onclick="event.stopPropagation(); deleteGame('${g.id}')">🗑️</button>` : ''}
             <div class="game-cover" style="${bgStyle}">
-                ${g.img ? '' : `<span class="game-emoji">${g.icon}</span>`}
+                ${g.img ? '' : `<span class="game-emoji">${fixMojibake(g.icon)}</span>`}
                 <b>${esc(g.name)}</b>
             </div>
             <div class="game-card-body">
