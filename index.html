@@ -2977,7 +2977,7 @@ async function deleteMod(id) {
 }
 
 /* ===================== ADMIN: JOGOS ===================== */
-function saveGame() {
+async function saveGame() {
     const name = $('formGameName').value.trim();
     if (!name) return showToast('Digite o nome do jogo.');
 
