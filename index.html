@@ -2635,6 +2635,19 @@ async function pushAllToSupabase() {
 /* ===================== ESTADO DA APLICAÇÃO ===================== */
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"'`]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '`': '&#96;' }[c]));
+
+function fixMojibake(str) {
+    if (!str || typeof str !== "string") return str || "";
+    return str
+        .replace(/ðŸŽ®/g, "🎮")
+        .replace(/ðŸŽ°/g, "🎰")
+        .replace(/ðŸ›¸/g, "🛸")
+        .replace(/ðŸ‘¤/g, "👤")
+        .replace(/ðŸ‘‘/g, "👑")
+        .replace(/âœ¨/g, "✨")
+        .replace(/ðŸ“©/g, "📨")
+        .replace(/ðŸ”’/g, "🔒");
+}
 function slug(s) { return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'jogo'; }
 
 const loadStorage = (k, def) => { try { const r = localStorage.getItem(k); return r ? JSON.parse(r) : def; } catch (e) { return def; } };
