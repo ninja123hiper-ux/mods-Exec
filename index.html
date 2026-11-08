@@ -1126,6 +1126,60 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        
+        /* ============== SUPABASE AUTH UI ============== */
+        .auth-actions-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .user-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--panel-raised);
+            border: 1px solid var(--border);
+            padding: 6px 12px;
+            border-radius: var(--radius-full);
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        .user-pill.is-admin {
+            border-color: var(--accent);
+            background: rgba(45, 230, 167, 0.12);
+            box-shadow: 0 0 10px rgba(45, 230, 167, 0.2);
+        }
+        .admin-badge-tag {
+            background: var(--accent);
+            color: #06231a;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+        .btn-logout {
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+        .auth-tab-btn {
+            flex: 1;
+            padding: 10px;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 14.5px;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .auth-tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
         /* ============== RESPONSIVO ============== */
         @media (max-width: 720px) {
             body { padding: 12px; }
@@ -1174,7 +1228,21 @@
             <a class="btn btn-discord" id="headerDiscordLink" href="https://discord.gg/yXw4pxZG6" target="_blank" rel="noopener noreferrer">💬 Discord</a>
             <a class="btn btn-youtube" id="headerYtLink" href="https://www.youtube.com/@seucanal" target="_blank" rel="noopener noreferrer">📺 YouTube</a>
             <button class="btn btn-outline" id="supabaseBtn" onclick="openSupabaseModal()" style="display:none;">⚡ Supabase</button>
-            <button class="btn btn-primary" id="adminToggleBtn" onclick="toggleAdminPrompt()">👑 Entrar</button>
+            
+            <!-- Área de Autenticação Supabase -->
+            <div class="auth-actions-wrap" id="userAuthArea">
+                <button class="btn btn-primary" id="loginBtn" onclick="openAuthModal('login')">👤 Entrar</button>
+                <button class="btn btn-outline" id="signupBtn" onclick="openAuthModal('signup')">✨ Criar Conta</button>
+                
+                <div id="loggedInUserBox" style="display:none; align-items:center; gap:8px;">
+                    <div class="user-pill" id="userPill">
+                        <span id="userPillIcon">🎮</span>
+                        <span id="userPillName">Gamer</span>
+                        <span id="userAdminBadge" class="admin-badge-tag" style="display:none;">ADMIN</span>
+                    </div>
+                    <button class="btn btn-sm btn-outline btn-logout" onclick="handleLogout()" title="Sair da conta">Sair</button>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -1515,6 +1583,60 @@
     </div>
 </div>
 
+
+<!-- Modal: Autenticação (Entrar / Criar Conta via Supabase) -->
+<div class="modal-overlay" id="authModal">
+    <div class="modal">
+        <div style="display:flex; border-bottom:1px solid var(--border); margin-bottom:20px;">
+            <button class="auth-tab-btn active" id="authTabLogin" onclick="switchAuthTab('login')">
+                🔑 Entrar
+            </button>
+            <button class="auth-tab-btn" id="authTabSignup" onclick="switchAuthTab('signup')">
+                ✨ Criar Conta
+            </button>
+        </div>
+
+        <!-- Formulário de Login -->
+        <div id="authLoginForm">
+            <div class="form-group">
+                <label>E-mail *</label>
+                <input type="email" id="loginEmail" placeholder="seuemail@exemplo.com" autocomplete="email">
+            </div>
+            <div class="form-group">
+                <label>Senha *</label>
+                <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+            </div>
+            <div id="loginError" style="color:var(--danger); font-size:13px; margin:10px 0; display:none; background:rgba(255,93,115,0.1); padding:8px 12px; border-radius:6px; border:1px solid var(--danger);"></div>
+            <div class="modal-actions" style="margin-top:20px;">
+                <button class="btn btn-outline" onclick="closeModals()">Cancelar</button>
+                <button class="btn btn-primary" id="btnSubmitLogin" onclick="handleLogin()">Entrar</button>
+            </div>
+        </div>
+
+        <!-- Formulário de Cadastro -->
+        <div id="authSignupForm" style="display:none;">
+            <div class="form-group">
+                <label>Nome de Usuário / Apelido Gamer *</label>
+                <input type="text" id="signupName" placeholder="Ex: NinjaGamer, ProPlayer...">
+            </div>
+            <div class="form-group">
+                <label>E-mail *</label>
+                <input type="email" id="signupEmail" placeholder="seuemail@exemplo.com" autocomplete="email">
+            </div>
+            <div class="form-group">
+                <label>Senha (mínimo 6 caracteres) *</label>
+                <input type="password" id="signupPass" placeholder="••••••••" autocomplete="new-password">
+            </div>
+            <div id="signupError" style="color:var(--danger); font-size:13px; margin:10px 0; display:none; background:rgba(255,93,115,0.1); padding:8px 12px; border-radius:6px; border:1px solid var(--danger);"></div>
+            <div id="signupSuccess" style="color:var(--accent); font-size:13px; margin:10px 0; display:none; background:rgba(45,230,167,0.1); padding:8px 12px; border-radius:6px; border:1px solid var(--accent);"></div>
+            <div class="modal-actions" style="margin-top:20px;">
+                <button class="btn btn-outline" onclick="closeModals()">Cancelar</button>
+                <button class="btn btn-primary" id="btnSubmitSignup" onclick="handleSignup()">Criar Conta</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Toast Notifier -->
 <div id="toast"></div>
 
@@ -1710,6 +1832,241 @@ const DEFAULT_COMMENTS = [
 ];
 
 
+
+/* ===================== SUPABASE AUTH & ADMIN SYSTEM ===================== */
+let currentUser = null;
+let currentProfile = null;
+
+function openAuthModal(tab = 'login') {
+    switchAuthTab(tab);
+    const logErr = $('loginError');
+    const signErr = $('signupError');
+    const signSucc = $('signupSuccess');
+    if (logErr) logErr.style.display = 'none';
+    if (signErr) signErr.style.display = 'none';
+    if (signSucc) signSucc.style.display = 'none';
+    openModal('authModal');
+}
+
+function switchAuthTab(tab) {
+    const tabLogin = $('authTabLogin');
+    const tabSignup = $('authTabSignup');
+    const formLogin = $('authLoginForm');
+    const formSignup = $('authSignupForm');
+    if (!tabLogin || !tabSignup) return;
+
+    if (tab === 'login') {
+        tabLogin.classList.add('active');
+        tabSignup.classList.remove('active');
+        formLogin.style.display = 'block';
+        formSignup.style.display = 'none';
+    } else {
+        tabLogin.classList.remove('active');
+        tabSignup.classList.add('active');
+        formLogin.style.display = 'none';
+        formSignup.style.display = 'block';
+    }
+}
+
+async function handleLogin() {
+    if (!sb) return showToast('Supabase não conectado.');
+    const email = $('loginEmail').value.trim();
+    const password = $('loginPass').value;
+    const errEl = $('loginError');
+    errEl.style.display = 'none';
+
+    if (!email || !password) {
+        errEl.textContent = 'Preencha o e-mail e a senha.';
+        errEl.style.display = 'block';
+        return;
+    }
+
+    const btn = $('btnSubmitLogin');
+    btn.disabled = true;
+    btn.textContent = 'Entrando...';
+
+    try {
+        const { data, error } = await sb.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+
+        closeModals();
+        showToast('✅ Login realizado com sucesso!');
+        await checkUserProfile(data.user);
+    } catch (err) {
+        errEl.textContent = err.message || 'Falha ao autenticar. Verifique e-mail e senha.';
+        errEl.style.display = 'block';
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Entrar';
+    }
+}
+
+async function handleSignup() {
+    if (!sb) return showToast('Supabase não conectado.');
+    const name = $('signupName').value.trim();
+    const email = $('signupEmail').value.trim();
+    const password = $('signupPass').value;
+    const errEl = $('signupError');
+    const succEl = $('signupSuccess');
+    errEl.style.display = 'none';
+    succEl.style.display = 'none';
+
+    if (!name) {
+        errEl.textContent = 'Digite seu nome de usuário gamer.';
+        errEl.style.display = 'block';
+        return;
+    }
+    if (!email || !password) {
+        errEl.textContent = 'Preencha o e-mail e a senha.';
+        errEl.style.display = 'block';
+        return;
+    }
+    if (password.length < 6) {
+        errEl.textContent = 'A senha deve ter no mínimo 6 caracteres.';
+        errEl.style.display = 'block';
+        return;
+    }
+
+    const btn = $('btnSubmitSignup');
+    btn.disabled = true;
+    btn.textContent = 'Criando conta...';
+
+    try {
+        const { data, error } = await sb.auth.signUp({
+            email,
+            password,
+            options: {
+                data: { display_name: name }
+            }
+        });
+        if (error) throw error;
+
+        if (data.user) {
+            // Cria ou garante o perfil na tabela profiles (is_admin = false por padrão)
+            try {
+                await sb.from('profiles').upsert([{
+                    id: data.user.id,
+                    email: data.user.email,
+                    display_name: name,
+                    is_admin: false
+                }]);
+            } catch (pErr) {
+                console.warn('Erro ao criar perfil:', pErr);
+            }
+        }
+
+        succEl.textContent = '🎉 Conta criada com sucesso!';
+        succEl.style.display = 'block';
+
+        setTimeout(async () => {
+            closeModals();
+            if (data.user) {
+                await checkUserProfile(data.user);
+                showToast('Bem-vindo ao Mods Exec, ' + name + '!');
+            }
+        }, 1200);
+    } catch (err) {
+        errEl.textContent = err.message || 'Erro ao criar conta.';
+        errEl.style.display = 'block';
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Criar Conta';
+    }
+}
+
+async function handleLogout() {
+    if (sb) {
+        try { await sb.auth.signOut(); } catch (e) {}
+    }
+    currentUser = null;
+    currentProfile = null;
+    isAdmin = false;
+    updateAuthUI();
+    updateAdminUI();
+    renderMods();
+    showToast('Você saiu da sua conta.');
+}
+
+async function checkUserProfile(user) {
+    if (!user) {
+        currentUser = null;
+        currentProfile = null;
+        isAdmin = false;
+        updateAuthUI();
+        updateAdminUI();
+        renderMods();
+        return;
+    }
+
+    currentUser = user;
+    try {
+        const { data: profile, error } = await sb
+            .from('profiles')
+            .select('*')
+            .eq('id', user.id)
+            .maybeSingle();
+
+        if (!error && profile) {
+            currentProfile = profile;
+            isAdmin = (profile.is_admin === true);
+        } else {
+            const defaultProf = {
+                id: user.id,
+                email: user.email,
+                display_name: user.user_metadata?.display_name || user.email.split('@')[0],
+                is_admin: false
+            };
+            try {
+                await sb.from('profiles').upsert([defaultProf]);
+            } catch (e) {}
+            currentProfile = defaultProf;
+            isAdmin = false;
+        }
+    } catch (e) {
+        console.warn('Erro ao carregar perfil:', e);
+        isAdmin = false;
+    }
+
+    updateAuthUI();
+    updateAdminUI();
+    renderMods();
+}
+
+function updateAuthUI() {
+    const loginBtn = $('loginBtn');
+    const signupBtn = $('signupBtn');
+    const userBox = $('loggedInUserBox');
+    const userPill = $('userPill');
+    const pillIcon = $('userPillIcon');
+    const pillName = $('userPillName');
+    const adminBadge = $('userAdminBadge');
+
+    if (!loginBtn || !signupBtn || !userBox) return;
+
+    if (currentUser) {
+        loginBtn.style.display = 'none';
+        signupBtn.style.display = 'none';
+        userBox.style.display = 'flex';
+
+        const displayName = (currentProfile && currentProfile.display_name) || currentUser.user_metadata?.display_name || currentUser.email.split('@')[0];
+        pillName.textContent = displayName;
+
+        if (isAdmin) {
+            userPill.classList.add('is-admin');
+            pillIcon.textContent = '👑';
+            adminBadge.style.display = 'inline-block';
+        } else {
+            userPill.classList.remove('is-admin');
+            pillIcon.textContent = '🎮';
+            adminBadge.style.display = 'none';
+        }
+    } else {
+        loginBtn.style.display = 'inline-flex';
+        signupBtn.style.display = 'inline-flex';
+        userBox.style.display = 'none';
+    }
+}
+
 /* ===================== SUPABASE CLIENT & SYNC ===================== */
 let sb = null;
 
@@ -1722,6 +2079,30 @@ function initSupabase() {
             console.log('⚡ Supabase inicializado com sucesso:', url);
             syncFromSupabase();
             updateSbStatusUI(true, 'Conectado ao Supabase com sucesso!');
+
+            // Checar sessão ativa de login do Supabase
+            sb.auth.getSession().then(({ data: { session } }) => {
+                if (session && session.user) {
+                    checkUserProfile(session.user);
+                } else {
+                    updateAuthUI();
+                }
+            });
+
+            // Monitorar login / logout em tempo real
+            sb.auth.onAuthStateChange(async (event, session) => {
+                if (session && session.user) {
+                    await checkUserProfile(session.user);
+                } else {
+                    currentUser = null;
+                    currentProfile = null;
+                    isAdmin = false;
+                    updateAuthUI();
+                    updateAdminUI();
+                    renderMods();
+                }
+            });
+
             return true;
         } catch (e) {
             console.error('Falha ao conectar ao Supabase:', e);
