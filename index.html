@@ -1938,8 +1938,8 @@ const DEFAULT_COMMENTS = [
 
 
 /* ===================== SUPABASE AUTH & ADMIN SYSTEM ===================== */
-let currentUser = null;
-let currentProfile = null;
+let currentUser = (() => { try { return JSON.parse(localStorage.getItem('mx_logged_user')); } catch(e) { return null; } })();
+let currentProfile = (() => { try { return JSON.parse(localStorage.getItem('mx_user_profile')); } catch(e) { return null; } })();
 
 function openAuthModal(tab = 'login') {
     switchAuthTab(tab);
@@ -2082,12 +2082,17 @@ async function handleSignup() {
 }
 
 async function handleLogout() {
+    if (!confirm('Deseja realmente sair da sua conta?')) return;
     if (sb) {
         try { await sb.auth.signOut(); } catch (e) {}
     }
     currentUser = null;
     currentProfile = null;
     isAdmin = false;
+    localStorage.removeItem('mx_logged_user');
+    localStorage.removeItem('mx_user_profile');
+    localStorage.removeItem('mx_isAdmin');
+    sessionStorage.removeItem('mx_isAdmin');
     updateAuthUI();
     updateAdminUI();
     renderMods();
@@ -2117,22 +2122,30 @@ async function checkUserProfile(user) {
             currentProfile = profile;
             isAdmin = (profile.is_admin === true);
         } else {
+            const isOwner = (user.email === 'ninja123hiper@gmail.com');
             const defaultProf = {
                 id: user.id,
                 email: user.email,
                 display_name: user.user_metadata?.display_name || user.email.split('@')[0],
-                is_admin: false
+                is_admin: isOwner
             };
             try {
-                await sb.from('profiles').upsert([defaultProf]);
+                const { error: upErr } = await sb.from('profiles').upsert([defaultProf]);
+                if (upErr) console.warn('Aviso upsert profiles:', upErr.message);
             } catch (e) {}
             currentProfile = defaultProf;
-            isAdmin = false;
+            isAdmin = isOwner;
         }
     } catch (e) {
         console.warn('Erro ao carregar perfil:', e);
         isAdmin = false;
     }
+
+    try {
+        if (currentUser) localStorage.setItem('mx_logged_user', JSON.stringify(currentUser));
+        if (currentProfile) localStorage.setItem('mx_user_profile', JSON.stringify(currentProfile));
+        localStorage.setItem('mx_isAdmin', isAdmin ? 'true' : 'false');
+    } catch (e) {}
 
     updateAuthUI();
     updateAdminUI();
@@ -2471,26 +2484,34 @@ function initSupabase() {
     const key = localStorage.getItem('mx_supabase_key') || CFG.supabaseAnonKey;
     if (window.supabase && url && key && (key.startsWith('eyJ') || key.startsWith('sb_publishable'))) {
         try {
-            sb = window.supabase.createClient(url, key);
+            sb = window.supabase.createClient(url, key, {
+                auth: {
+                    persistSession: true,
+                    storage: window.localStorage,
+                    autoRefreshToken: true,
+                    detectSessionInUrl: true
+                }
+            });
             console.log('⚡ Supabase inicializado com sucesso:', url);
             syncFromSupabase();
             updateSbStatusUI(true, 'Conectado ao Supabase com sucesso!');
 
-            // Checar sessão ativa de login do Supabase
+            // Checar sessão persistente ativa de login
             sb.auth.getSession().then(({ data: { session } }) => {
                 if (session && session.user) {
                     checkUserProfile(session.user);
-                } else {
+                } else if (!currentUser) {
                     updateAuthUI();
+                    updateAdminUI();
                 }
             });
 
-            // Monitorar login / logout em tempo real
-            // Failsafe: se a URL contiver type=recovery (link do e-mail do Supabase)
+            // Failsafe para redefinição de senha via link
             if (window.location.hash.includes('type=recovery') || window.location.search.includes('type=recovery')) {
                 setTimeout(openDirectResetPassModal, 400);
             }
 
+            // Monitorar login / logout apenas em eventos explícitos
             sb.auth.onAuthStateChange(async (event, session) => {
                 if (event === 'PASSWORD_RECOVERY') {
                     openDirectResetPassModal();
@@ -2498,10 +2519,13 @@ function initSupabase() {
                 }
                 if (session && session.user) {
                     await checkUserProfile(session.user);
-                } else {
+                } else if (event === 'SIGNED_OUT') {
                     currentUser = null;
                     currentProfile = null;
                     isAdmin = false;
+                    localStorage.removeItem('mx_logged_user');
+                    localStorage.removeItem('mx_user_profile');
+                    localStorage.removeItem('mx_isAdmin');
                     updateAuthUI();
                     updateAdminUI();
                     renderMods();
@@ -2666,7 +2690,7 @@ let games = loadStorage('mx_games', DEFAULT_GAMES);
 let mods = loadStorage('mx_mods', DEFAULT_MODS);
 let mural = loadStorage('mx_mural', DEFAULT_COMMENTS);
 let votes = loadStorage('mx_votes', {});
-let isAdmin = sessionStorage.getItem('mx_isAdmin') === 'true';
+let isAdmin = localStorage.getItem('mx_isAdmin') === 'true';
 
 let currentSection = 'games';
 let selectedGame = 'todos';
@@ -3449,7 +3473,7 @@ function toggleAdminPrompt() {
     const btn = $('adminToggleBtn');
     if (isAdmin) {
         isAdmin = false;
-        sessionStorage.setItem('mx_isAdmin', 'false');
+        localStorage.setItem('mx_isAdmin', 'false');
         document.body.classList.remove('admin-mode');
         if (btn) btn.textContent = '👑 Entrar';
         updateAdminUI();
@@ -3463,7 +3487,7 @@ function toggleAdminPrompt() {
         if (pass === null) return;
         if (pass === CFG.adminPass) {
             isAdmin = true;
-            sessionStorage.setItem('mx_isAdmin', 'true');
+            localStorage.setItem('mx_isAdmin', 'true');
             document.body.classList.add('admin-mode');
             if (btn) btn.textContent = '👑 Sair do Admin';
             updateAdminUI();
