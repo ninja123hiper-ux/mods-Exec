@@ -1492,19 +1492,20 @@ const CFG = {
     adminPass: 'ninja919676' // Senha para habilitar o modo administrador
 };
 
-/* ===================== JOGOS PADRÃO ===================== */
+/* ===================== JOGOS PADRÃO (OFICIAIS) ===================== */
 const DEFAULT_GAMES = [
-    { id: 'minecraft', name: 'Minecraft', icon: '⛏️', img: '' },
-    { id: 'gta-v', name: 'GTA V', icon: '🚗', img: '' },
-    { id: 'skyrim', name: 'Skyrim', icon: '🐉', img: '' },
-    { id: 'stardew-valley', name: 'Stardew Valley', icon: '🌾', img: '' },
-    { id: 'cyberpunk-2077', name: 'Cyberpunk 2077', icon: '🤖', img: '' },
-    { id: 'terraria', name: 'Terraria', icon: '🌳', img: '' },
-    { id: 'the-sims-4', name: 'The Sims 4', icon: '🏠', img: '' },
-    { id: 'elden-ring', name: 'Elden Ring', icon: '⚔️', img: '' },
-    { id: 'fallout-4', name: 'Fallout 4', icon: '☢️', img: '' },
-    { id: 'rdr2', name: 'Red Dead 2', icon: '🤠', img: '' },
-    { id: 'outros', name: 'Outros Jogos', icon: '🎮', img: '' }
+    {
+        id: "muck",
+        name: "MUCK",
+        icon: "🎮",
+        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcRu4L_jntj_hgMe4LdTXdpniRVzcWpqllMsjgH5uOpA&s=10"
+    },
+    {
+        id: "crab-game",
+        name: "CRAB GAME",
+        icon: "🎮",
+        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTpfIgvqWFYPTeFFcr1EblB0PHpuoF-yFHFLu9G9Y0_A&s"
+    }
 ];
 
 /* ===================== CATEGORIAS PADRÃO ===================== */
@@ -1517,126 +1518,117 @@ const CATEGORIES = [
     'Gráficos & Visuais',
     'Utilidades & Ferramentas',
     'Veículos & Armas',
-    'Pacotes (Modpacks)'
+    'Pacotes (Modpacks)',
+    'Outros'
 ];
 
-/* ===================== MODS DE EXEMPLO INICIAIS ===================== */
+/* ===================== MODS OFICIAIS ===================== */
 const DEFAULT_MODS = [
     {
-        id: 1,
-        name: 'Complimentary Shaders Reimagined',
-        game: 'minecraft',
-        cat: 'Texturas & Shaders',
-        ver: 'v2.8.4 (1.16 - 1.20+)',
-        size: '12 MB',
-        platform: 'PC (Windows)',
-        url: 'https://modrinth.com/shader/complementary-reimagined',
-        img: '',
-        featured: true,
-        req: 'Iris Shaders ou OptiFine',
-        desc: 'Iluminação ultrarrealista, sombras dinâmicas, reflexos na água e céu com nuvens volumétricas personalizadas.\n\nComo instalar:\n1. Baixe o arquivo .zip dos shaders.\n2. Abra o Minecraft com Iris ou OptiFine instalado.\n3. Vá em Opções -> Gráficos -> Shaders -> Abrir pasta de shaders.\n4. Arraste o arquivo .zip para a pasta e selecione dentro do jogo.',
-        dl: 3420,
-        ok: 218,
-        old: 4,
-        at: Date.now() - 6e8
-    },
-    {
-        id: 2,
-        name: 'Realistic Driving V & Supercars Pack',
-        game: 'gta-v',
-        cat: 'Veículos & Armas',
-        ver: 'v4.5',
-        size: '420 MB',
-        platform: 'PC (Windows)',
-        url: '',
-        img: '',
-        featured: true,
-        req: 'ScriptHookV + OpenIV',
-        desc: 'Física de condução realista com mais de 35 carros esportivos e superesportivos detalhados em 4K com interiores personalizáveis.\n\nComo instalar:\n1. Instale o ScriptHookV na pasta raiz do GTA V.\n2. Use o OpenIV em Edit Mode e instale o pacote .oiv através do Package Installer.\n3. Inicie o jogo no modo história.',
-        dl: 2890,
-        ok: 174,
-        old: 7,
-        at: Date.now() - 4e8
-    },
-    {
-        id: 3,
-        name: 'Skyrim Flora & Cities Overhaul',
-        game: 'skyrim',
-        cat: 'Gráficos & Visuais',
-        ver: 'v3.2',
-        size: '680 MB',
-        platform: 'PC (Windows)',
-        url: '',
-        img: '',
-        featured: false,
-        req: 'SKSE64 + Vortex ou Mod Organizer 2',
-        desc: 'Reformula completamente a vegetação, árvores e cidades de Skyrim com novas texturas, árvores densas e iluminação aprimorada.\n\nComo instalar:\n1. Baixe e instale via Vortex ou Mod Organizer 2.\n2. Certifique-se de executar o jogo através do skse64_loader.exe.',
-        dl: 1940,
-        ok: 96,
-        old: 2,
-        at: Date.now() - 3e8
-    },
-    {
-        id: 4,
-        name: 'Stardew Valley Expanded (SVE)',
-        game: 'stardew-valley',
-        cat: 'Gameplay & Mecânicas',
-        ver: 'v1.14.24',
-        size: '88 MB',
-        platform: 'PC & Mobile',
-        url: 'https://www.nexusmods.com/stardewvalley/mods/3753',
-        img: '',
-        featured: true,
-        req: 'SMAPI 3.14+',
-        desc: 'Adiciona novas áreas no mapa, mais de 25 novos NPCs, novos festivais, cultivos inéditos e novas histórias românticas.\n\nComo instalar:\n1. Instale o SMAPI mais recente.\n2. Extraia o conteúdo de Stardew Valley Expanded dentro da pasta Stardew Valley/Mods.\n3. Execute o jogo pelo SMAPI.',
-        dl: 1620,
-        ok: 130,
-        old: 1,
-        at: Date.now() - 2e8
-    },
-    {
-        id: 5,
-        name: 'Cyberpunk 2077 HD Reworked Project',
-        game: 'cyberpunk-2077',
-        cat: 'Texturas & Shaders',
-        ver: 'v2.1',
-        size: '1.4 GB',
-        platform: 'PC (Windows)',
-        url: '',
-        img: '',
-        featured: false,
-        req: 'Compatível com Patch 2.0 e 2.1',
-        desc: 'Substitui centenas de texturas de Night City por versões em alta definição com relevo aprimorado sem impacto no desempenho.\n\nComo instalar:\n1. Extraia os arquivos .archive dentro da pasta Cyberpunk 2077/archive/pc/mod.',
-        dl: 1150,
-        ok: 82,
-        old: 3,
-        at: Date.now() - 1e8
-    },
-    {
-        id: 6,
-        name: 'Farming & Cooking Overhaul Deluxe',
-        game: 'the-sims-4',
-        cat: 'Gameplay & Mecânicas',
-        ver: 'v2.0',
-        size: '34 MB',
-        platform: 'PC (Windows)',
-        url: '',
-        img: '',
-        featured: false,
-        req: 'The Sims 4 Atualizado',
-        desc: 'Mais de 40 novas receitas caseiras, ingredientes colhíveis e opções de culinária artesanal para seus Sims.\n\nComo instalar:\n1. Extraia o arquivo .package na pasta Documentos/Electronic Arts/The Sims 4/Mods.\n2. Ative mods e scripts nas opções do jogo.',
-        dl: 970,
-        ok: 64,
+        id: 1794103495169,
+        dl: 0,
+        ok: 0,
         old: 0,
-        at: Date.now() - 5e7
+        at: 1794103495181,
+        name: "BOLA DA SORTE",
+        game: "muck",
+        cat: "Texturas & Shaders",
+        ver: "1.0",
+        size: "63.6 KB",
+        platform: "PC (Windows)",
+        url: "https://thunderstore.io/package/download/muckers/ShrineOfChance/0.5.1/",
+        fileName: "muckers-ShrineOfChance-0.5.1.zip",
+        fileExt: ".zip",
+        img: "https://ccdn.thunderstore.io/live/repository/icons/muckers-ShrineOfChance-0.5.1.png",
+        req: "Requer BepInExPack Muck",
+        desc: "\"Os rolos param.\"  Adiciona máquinas caça-níqueis Shrine of Chance ao Muck, inspiradas em Risk of Rain 2. Algumas aparecem na grama no início de cada mundo. Observe uma delas e pressione interagir.  O primeiro uso custa 17 moedas . Os preços seguintes são floor(17 × 1.4 ^ uses): 23, depois 33 e, por fim, 46. Por padrão, o preço também segue os preços dos baús do dia. Ao pagar, a alavanca é acionada e três rolos giram acima do santuário. Os rolos começam a girar quando a alavanca chega ao fundo e param da esquerda para a direita ao longo de aproximadamente 2,4 segundos. A recompensa é liberada quando o último rolo para.  Cada rodada paga gera um novo conjunto de probabilidades. Nada, Branco, Azul, Lendário e Chefe recebem no mínimo 1% e no máximo 50% , e a soma dos cinco resulta em 100%. O Nuke recebe 5% de cada rodada e os outros cinco dividem os 95% restantes. O gabinete exibe as probabilidades daquela rodada. O jogador que pagou também recebe um breve HUD com os mesmos seis números. A linha de bate-papo repete esses números a cada vez que os rolos param.",
+        featured: true
+    },
+    {
+        id: 1794103386497,
+        dl: 0,
+        ok: 0,
+        old: 0,
+        at: 1794103386557,
+        name: "MuckReplayable",
+        game: "muck",
+        cat: "Mapas & Mundos",
+        ver: "2.0",
+        size: "153 MB",
+        platform: "PC (Windows)",
+        url: "https://thunderstore.io/package/download/Yure/MuckReplayable/2.0.3/",
+        fileName: "Yure-MuckReplayable-2.0.3.zip",
+        fileExt: ".zip",
+        img: "https://ccdn.thunderstore.io/live/repository/icons/Yure-MuckReplayable-2.0.3.png",
+        req: "Requer BepInExPack Muck",
+        desc: "Ilhas maiores, biomas de neve/pântano/vulcão, cavernas interligadas, florestas nevadas, conquistas no estilo Steam e modo multijogador mais fluido.",
+        featured: true
+    },
+    {
+        id: 1794103234933,
+        dl: 0,
+        ok: 0,
+        old: 0,
+        at: 1794103234946,
+        name: "Abdução por OVNI",
+        game: "muck",
+        cat: "Outros",
+        ver: "1.0",
+        size: "2.5 MB",
+        platform: "PC (Windows)",
+        url: "https://thunderstore.io/package/download/muckers/UFOAbduction/0.2.0/",
+        fileName: "muckers-UFOAbduction-0.2.0.zip",
+        fileExt: ".zip",
+        img: "https://ccdn.thunderstore.io/live/repository/icons/muckers-UFOAbduction-0.2.0.png",
+        req: "Requer BepInExPack Muck",
+        desc: "\"Três OVNIs! Olhem para cima.\"  Adiciona um resultado de OVNI ao Santuário da Sorte. Por padrão, 10% de cada rolagem paga resulta em três OVNIs. Os outros resultados do santuário são reduzidos proporcionalmente para preencher os 90% restantes: com as configurações padrão do Santuário da Sorte, a chance de um ataque nuclear cai de 5% para 4,5%, e as chances de Nada, Branco, Azul, Lendário e Chefe passam a ser de 85,5% em vez de 95%. O painel de probabilidades mostra o OVNI como uma coluna separada.  Quando os rolos param no OVNI, um disco voador desce a cerca de 15 metros acima do jogador que girou. Ele emite um zumbido, suas luzes de contorno piscam e um raio trator atinge o solo. Durante 3 segundos, o raio levanta o jogador para baixo do disco voador, com seus controles travados. O disco sobe o suficiente para ultrapassar as colinas, leva o jogador a uma distância de cerca de 3/8 da largura da ilha ou mais, desce sobre solo seco e o deposita em seu interior. Então, ele decola. Toda a viagem dura até cerca de 40 segundos. O jogador não pode ser ferido enquanto estiver sendo segurado pelo disco voador, nem por 1,5 segundos após o pouso.  Se o jogador estiver morto, a menos de 50 metros de um chefe, ou se não houver um local seco e transitável a uma distância suficiente, o disco voador sobrevoa o local, observa o jogador e vai embora.  O disco voador é propositalmente realista. É um modelo detalhado com painéis de metal escovado, rebites, uma cúpula de vidro e luzes brilhantes. A ideia é que ele pareça deslocado em Muck.",
+        featured: true
+    },
+    {
+        id: 1794102857713,
+        dl: 2,
+        ok: 1,
+        old: 0,
+        at: 1794102857798,
+        name: "Sujeira da Gatinha",
+        game: "muck",
+        cat: "Pacotes (Modpacks)",
+        ver: "1.0",
+        size: "219.4 MB",
+        platform: "PC (Windows)",
+        url: "https://thunderstore.io/package/download/kittykitty/Kittys_Muck/0.1.88/",
+        fileName: "kittykitty-Kittys_Muck-0.1.88 (1).zip",
+        fileExt: ".zip",
+        img: "https://ccdn.thunderstore.io/live/repository/icons/kittykitty-Kittys_Muck-0.1.88.png",
+        req: "Requer BepInExPack Muck",
+        desc: "============================================================\nCOMO INSTALAR ESTE MOD NA PASTA PLUGINS DO BEPINEX\n============================================================\n\nPara que este mod funcione corretamente no Muck, certifique-se de \njá ter o BepInExPack instalado na pasta raiz do seu jogo. Em seguida, \nsiga o passo a passo abaixo:\n\n------------------------------------------------------------\nPASSO A PASSO:\n------------------------------------------------------------\n\n1. LOCALIZE A PASTA DO JOGO NA STEAM:\n   - Abra a sua Biblioteca da Steam.\n   - Clique com o botão direito em Muck e selecione: \n     Gerenciar > Ver arquivos locais.\n\n2. ENTRE NA PASTA DE PLUGINS:\n   - Na pasta do jogo que se abriu, acesse a pasta \"BepInEx\".\n   - Dentro dela, abra a pasta \"plugins\".\n   (O caminho completo deve ser algo como: \n   \\Steam\\steamapps\\common\\Muck\\BepInEx\\plugins\\)\n\n3. INSIRA O ARQUIVO DO MOD:\n   - Se o mod baixado vier compactado em um arquivo .zip, extraia-o.\n   - Copie o arquivo principal do mod (que termina com a extensão **.dll**) \n     e cole-o diretamente dentro da pasta **plugins**.\n\n4. VERIFIQUE SE FUNCIONOU:\n   - Inicie o Muck normalmente pela Steam.\n   - A janela de console preta do BepInEx será aberta carregando o mod, \n     e você poderá testar os recursos dentro de uma partida.\n\n============================================================",
+        featured: true
+    },
+    {
+        id: 1794102383078,
+        dl: 0,
+        ok: 1,
+        old: 0,
+        at: 1794102383098,
+        name: "BepInExPack Muck / uso obrigario para rodar os mods",
+        game: "muck",
+        cat: "Outros",
+        ver: "1.0",
+        size: "655.7 KB",
+        platform: "PC (Windows)",
+        url: "https://thunderstore.io/package/download/BepInEx/BepInExPack_Muck/5.4.1101/",
+        fileName: "BepInEx-BepInExPack_Muck-5.4.1101.zip",
+        fileExt: ".zip",
+        img: "https://ccdn.thunderstore.io/live/repository/icons/BepInEx-BepInExPack_Muck-5.4.1101.png",
+        req: "Instalação obrigatória",
+        desc: "============================================================\nGUIA DE INSTALAÇÃO: BEPINEXPACK MUCK\n============================================================\n\nO QUE É:\nO BepInEx é o framework essencial para carregar mods no jogo Muck. \nEste pacote (BepInExPack Muck) já vem pré-configurado com todas as \ndependências necessárias para o funcionamento dos mods do NinjaExec.\n\n------------------------------------------------------------\nPASSO A PASSO PARA OS JOGADORES:\n------------------------------------------------------------\n\n1. PRÉ-REQUISITOS:\n   - Ter o jogo Muck instalado na Steam.\n   - Executar o jogo pelo menos uma vez antes de instalar o mod.\n\n2. ABRIR A PASTA RAIZ DO JOGO NA STEAM:\n   - Abra a Biblioteca da Steam.\n   - Clique com o botão direito em Muck e selecione:\n     Gerenciar > Ver arquivos locais\n     (Isso abrirá a pasta onde o jogo está instalado, geralmente \n     em C:\\Program Files (x86)\\Steam\\steamapps\\common\\Muck).\n\n3. EXTRAIR OS ARQUIVOS DO MOD:\n   - Baixe o BepInExPack Muck pelo link oficial ou pelo NinjaExec.\n   - Extraia o conteúdo do arquivo .zip diretamente para dentro \n     da pasta raiz do Muck (na mesma pasta onde fica o Muck.exe).\n   - Certifique-se de que a pasta \"BepInEx\", a pasta \"dotnet\" e o \n     arquivo \"winhttp.dll\" fiquem na mesma pasta do executável do jogo.\n\n4. TESTAR A INSTALAÇÃO:\n   - Inicie o Muck normalmente pela Steam.\n   - Uma janela preta de console (LogOutput) deverá aparecer junto \n     com o jogo, indicando que o BepInEx foi carregado com sucesso.\n\n------------------------------------------------------------\nONDE COLOCAR OS MODS (.DLL):\n------------------------------------------------------------\nDepois de instalar o BepInEx, coloque os arquivos de mods baixados \nno site na seguinte pasta:\n\n\\Steam\\steamapps\\common\\Muck\\BepInEx\\plugins\\\n\n============================================================",
+        featured: true
     }
 ];
 
 /* ===================== COMENTÁRIOS PADRÃO DO MURAL ===================== */
 const DEFAULT_COMMENTS = [
-    { id: 1, author: 'GamerBR99', text: 'Os shaders para Minecraft funcionaram perfeitamente com Iris! FPS liso demais.', at: Date.now() - 864e5 },
-    { id: 2, author: 'Lucas_Modder', text: 'Vocês poderiam trazer um pack de gráficos de Elden Ring e armas novas? Ficaria top!', at: Date.now() - 432e5 },
-    { id: 3, author: 'Dono Mods Exec', text: 'Sejam bem-vindos ao Mods Exec! Podem pedir novos mods aqui no mural que a gente adiciona na biblioteca.', at: Date.now() - 1e7, isOwner: true }
+    { id: 1, author: 'Dono Mods Exec', text: 'Sejam bem-vindos ao Mods Exec! Adicionados os novos mods de MUCK e CRAB GAME.', at: Date.now() - 36e5, isOwner: true }
 ];
 
 /* ===================== ESTADO DA APLICAÇÃO ===================== */
@@ -1646,6 +1638,14 @@ function slug(s) { return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,
 
 const loadStorage = (k, def) => { try { const r = localStorage.getItem(k); return r ? JSON.parse(r) : def; } catch (e) { return def; } };
 const saveStorage = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+
+// Força a atualização do cache de dados para todos os visitantes
+const CURRENT_DATA_VER = 'v4_muck_crab_official';
+if (localStorage.getItem('mx_data_ver') !== CURRENT_DATA_VER) {
+    localStorage.removeItem('mx_games');
+    localStorage.removeItem('mx_mods');
+    localStorage.setItem('mx_data_ver', CURRENT_DATA_VER);
+}
 
 let games = loadStorage('mx_games', DEFAULT_GAMES);
 let mods = loadStorage('mx_mods', DEFAULT_MODS);
