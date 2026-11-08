@@ -1604,7 +1604,10 @@
                 <input type="email" id="loginEmail" placeholder="seuemail@exemplo.com" autocomplete="email">
             </div>
             <div class="form-group">
-                <label>Senha *</label>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                    <label style="margin-bottom:0;">Senha *</label>
+                    <a href="javascript:void(0)" onclick="openRecoveryView(1)" style="font-size:12.5px; color:var(--text-muted); text-decoration:none;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-muted)'">Esqueceu a senha?</a>
+                </div>
                 <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
             </div>
             <div id="loginError" style="color:var(--danger); font-size:13px; margin:10px 0; display:none; background:rgba(255,93,115,0.1); padding:8px 12px; border-radius:6px; border:1px solid var(--danger);"></div>
@@ -1635,6 +1638,75 @@
                 <button class="btn btn-primary" id="btnSubmitSignup" onclick="handleSignup()">Criar Conta</button>
             </div>
         </div>
+        <!-- Formulário de Recuperação de Senha por Código / OTP -->
+        <div id="authRecoveryForm" style="display:none;">
+            <!-- Etapa 1: Digitar E-mail -->
+            <div id="recoveryStep1">
+                <div style="margin-bottom:16px;">
+                    <h3 style="margin:0 0 6px; font-size:17px; display:flex; align-items:center; gap:8px;">
+                        <span>🔐</span> Recuperar Senha ou Conta
+                    </h3>
+                    <p style="margin:0; font-size:13px; color:var(--text-muted); line-height:1.4;">
+                        Digite o e-mail da sua conta para receber um <b>código de verificação de 6 dígitos</b>.
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label>E-mail Cadastrado *</label>
+                    <input type="email" id="recoveryEmail" placeholder="seuemail@exemplo.com" autocomplete="email">
+                </div>
+
+                <div id="recoveryError1" style="color:var(--danger); font-size:13px; margin:10px 0; display:none; background:rgba(255,93,115,0.1); padding:8px 12px; border-radius:6px; border:1px solid var(--danger);"></div>
+                <div id="recoverySuccess1" style="color:var(--accent); font-size:13px; margin:10px 0; display:none; background:rgba(45,230,167,0.1); padding:8px 12px; border-radius:6px; border:1px solid var(--accent);"></div>
+
+                <div class="modal-actions" style="margin-top:20px; justify-content:space-between;">
+                    <button class="btn btn-outline" onclick="switchAuthTab('login')">⬅️ Voltar ao Login</button>
+                    <button class="btn btn-primary" id="btnSendRecoveryCode" onclick="handleSendRecoveryCode()">📨 Enviar Código</button>
+                </div>
+            </div>
+
+            <!-- Etapa 2: Digitar Código & Nova Senha -->
+            <div id="recoveryStep2" style="display:none;">
+                <div style="margin-bottom:16px;">
+                    <h3 style="margin:0 0 6px; font-size:17px; display:flex; align-items:center; gap:8px;">
+                        <span>✨</span> Digite o Código & Nova Senha
+                    </h3>
+                    <p style="margin:0; font-size:13px; color:var(--text-muted); line-height:1.4;">
+                        Enviamos o código de 6 dígitos para: <b id="recoveryTargetEmailText" style="color:var(--accent);"></b>
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label>Código de Verificação (6 dígitos) *</label>
+                    <input type="text" id="recoveryCode" maxlength="8" placeholder="123456" style="font-family:monospace; font-size:20px; letter-spacing:5px; text-align:center; font-weight:800; color:var(--accent); background:var(--bg-color);">
+                </div>
+
+                <div class="form-group">
+                    <label>Criar Nova Senha (mínimo 6 caracteres) *</label>
+                    <input type="password" id="recoveryNewPass" placeholder="••••••••" autocomplete="new-password">
+                </div>
+
+                <div class="form-group">
+                    <label>Confirmar Nova Senha *</label>
+                    <input type="password" id="recoveryConfirmPass" placeholder="••••••••" autocomplete="new-password">
+                </div>
+
+                <div id="recoveryError2" style="color:var(--danger); font-size:13px; margin:10px 0; display:none; background:rgba(255,93,115,0.1); padding:8px 12px; border-radius:6px; border:1px solid var(--danger);"></div>
+                <div id="recoverySuccess2" style="color:var(--accent); font-size:13px; margin:10px 0; display:none; background:rgba(45,230,167,0.1); padding:8px 12px; border-radius:6px; border:1px solid var(--accent);"></div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin:8px 0 16px; font-size:12.5px;">
+                    <a href="javascript:void(0)" onclick="handleSendRecoveryCode(true)" id="resendCodeLink" style="color:var(--text-muted); text-decoration:underline;">
+                        Não recebeu? Reenviar código
+                    </a>
+                </div>
+
+                <div class="modal-actions" style="margin-top:10px; justify-content:space-between;">
+                    <button class="btn btn-outline" onclick="openRecoveryView(1)">⬅️ Voltar</button>
+                    <button class="btn btn-primary" id="btnConfirmReset" onclick="handleConfirmPasswordReset()">🔒 Salvar Nova Senha</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -1854,7 +1926,10 @@ function switchAuthTab(tab) {
     const tabSignup = $('authTabSignup');
     const formLogin = $('authLoginForm');
     const formSignup = $('authSignupForm');
+    const formRecovery = $('authRecoveryForm');
     if (!tabLogin || !tabSignup) return;
+
+    if (formRecovery) formRecovery.style.display = 'none';
 
     if (tab === 'login') {
         tabLogin.classList.add('active');
@@ -2081,6 +2156,179 @@ function updateAdminUI() {
     if (sbBtn) sbBtn.style.display = isAdmin ? 'inline-flex' : 'none';
     const adminBtn = $('adminToggleBtn');
     if (adminBtn) adminBtn.textContent = isAdmin ? '👑 Sair do Admin' : '👑 Entrar';
+}
+
+
+/* ===================== RECUPERAÇÃO DE SENHA (CÓDIGO / OTP) ===================== */
+let pendingRecoveryEmail = '';
+
+function openRecoveryView(step = 1) {
+    const tabLogin = $('authTabLogin');
+    const tabSignup = $('authTabSignup');
+    const formLogin = $('authLoginForm');
+    const formSignup = $('authSignupForm');
+    const formRecovery = $('authRecoveryForm');
+    const step1 = $('recoveryStep1');
+    const step2 = $('recoveryStep2');
+
+    if (tabLogin) tabLogin.classList.remove('active');
+    if (tabSignup) tabSignup.classList.remove('active');
+    if (formLogin) formLogin.style.display = 'none';
+    if (formSignup) formSignup.style.display = 'none';
+    if (formRecovery) formRecovery.style.display = 'block';
+
+    if (step === 1) {
+        if (step1) step1.style.display = 'block';
+        if (step2) step2.style.display = 'none';
+        const err1 = $('recoveryError1');
+        const succ1 = $('recoverySuccess1');
+        if (err1) err1.style.display = 'none';
+        if (succ1) succ1.style.display = 'none';
+
+        const loginEmail = $('loginEmail') ? $('loginEmail').value.trim() : '';
+        const recEmail = $('recoveryEmail');
+        if (recEmail && loginEmail && !recEmail.value) {
+            recEmail.value = loginEmail;
+        }
+    } else {
+        if (step1) step1.style.display = 'none';
+        if (step2) step2.style.display = 'block';
+        const err2 = $('recoveryError2');
+        const succ2 = $('recoverySuccess2');
+        if (err2) err2.style.display = 'none';
+        if (succ2) succ2.style.display = 'none';
+        const targetText = $('recoveryTargetEmailText');
+        if (targetText) targetText.textContent = pendingRecoveryEmail;
+    }
+}
+
+async function handleSendRecoveryCode(isResend = false) {
+    if (!sb) return showToast('Supabase não conectado.');
+    const emailInput = $('recoveryEmail');
+    const email = isResend ? pendingRecoveryEmail : (emailInput ? emailInput.value.trim() : '');
+    const errEl = isResend ? $('recoveryError2') : $('recoveryError1');
+    const succEl = isResend ? $('recoverySuccess2') : $('recoverySuccess1');
+    const btn = $('btnSendRecoveryCode');
+
+    if (errEl) errEl.style.display = 'none';
+    if (succEl) succEl.style.display = 'none';
+
+    if (!email) {
+        if (errEl) {
+            errEl.textContent = 'Digite o seu e-mail cadastrado.';
+            errEl.style.display = 'block';
+        }
+        return;
+    }
+
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Enviando...';
+    }
+
+    try {
+        const { error } = await sb.auth.resetPasswordForEmail(email);
+        if (error) throw error;
+
+        pendingRecoveryEmail = email;
+        if (succEl) {
+            succEl.textContent = '📨 Código enviado para o seu e-mail!';
+            succEl.style.display = 'block';
+        }
+        showToast('Código enviado para ' + email);
+
+        setTimeout(() => {
+            openRecoveryView(2);
+        }, 800);
+    } catch (err) {
+        if (errEl) {
+            errEl.textContent = err.message || 'Erro ao enviar código de recuperação.';
+            errEl.style.display = 'block';
+        }
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = '📨 Enviar Código';
+        }
+    }
+}
+
+async function handleConfirmPasswordReset() {
+    if (!sb) return showToast('Supabase não conectado.');
+    const code = $('recoveryCode') ? $('recoveryCode').value.trim() : '';
+    const newPass = $('recoveryNewPass') ? $('recoveryNewPass').value : '';
+    const confirmPass = $('recoveryConfirmPass') ? $('recoveryConfirmPass').value : '';
+    const errEl = $('recoveryError2');
+    const succEl = $('recoverySuccess2');
+    const btn = $('btnConfirmReset');
+
+    if (errEl) errEl.style.display = 'none';
+    if (succEl) succEl.style.display = 'none';
+
+    if (!code) {
+        errEl.textContent = 'Digite o código de 6 dígitos que você recebeu no e-mail.';
+        errEl.style.display = 'block';
+        return;
+    }
+    if (!newPass || !confirmPass) {
+        errEl.textContent = 'Digite e confirme a nova senha.';
+        errEl.style.display = 'block';
+        return;
+    }
+    if (newPass.length < 6) {
+        errEl.textContent = 'A nova senha deve ter no mínimo 6 caracteres.';
+        errEl.style.display = 'block';
+        return;
+    }
+    if (newPass !== confirmPass) {
+        errEl.textContent = 'As senhas digitadas não coincidem.';
+        errEl.style.display = 'block';
+        return;
+    }
+
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Redefinindo senha...';
+    }
+
+    try {
+        // 1. Validar OTP do tipo recovery
+        const { data: verifyData, error: verifyErr } = await sb.auth.verifyOtp({
+            email: pendingRecoveryEmail,
+            token: code,
+            type: 'recovery'
+        });
+
+        if (verifyErr) throw verifyErr;
+
+        // 2. Atualizar para a nova senha
+        const { data: updateData, error: updateErr } = await sb.auth.updateUser({
+            password: newPass
+        });
+
+        if (updateErr) throw updateErr;
+
+        succEl.textContent = '🎉 Senha redefinida com sucesso! Conectando...';
+        succEl.style.display = 'block';
+
+        setTimeout(async () => {
+            closeModals();
+            const usr = (updateData && updateData.user) || (verifyData && verifyData.user);
+            if (usr) {
+                await checkUserProfile(usr);
+            }
+            showToast('✅ Senha alterada com sucesso! Você já está conectado.');
+        }, 1400);
+
+    } catch (err) {
+        errEl.textContent = err.message || 'Código inválido ou expirado. Verifique os números digitados.';
+        errEl.style.display = 'block';
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.textContent = '🔒 Salvar Nova Senha';
+        }
+    }
 }
 
 /* ===================== SUPABASE CLIENT & SYNC ===================== */
