@@ -81,6 +81,7 @@
             width: 100vw; height: 100vh;
             z-index: -2;
             display: block;
+            pointer-events: none;
         }
 
         .bg-orb-layer {
@@ -2067,6 +2068,21 @@ function updateAuthUI() {
     }
 }
 
+
+function updateAdminUI() {
+    if (isAdmin) {
+        document.body.classList.add('admin-mode');
+    } else {
+        document.body.classList.remove('admin-mode');
+    }
+    const adminOnlyEls = document.querySelectorAll('.admin-only');
+    adminOnlyEls.forEach(el => { el.style.display = isAdmin ? 'inline-flex' : 'none'; });
+    const sbBtn = $('supabaseBtn');
+    if (sbBtn) sbBtn.style.display = isAdmin ? 'inline-flex' : 'none';
+    const adminBtn = $('adminToggleBtn');
+    if (adminBtn) adminBtn.textContent = isAdmin ? '👑 Sair do Admin' : '👑 Entrar';
+}
+
 /* ===================== SUPABASE CLIENT & SYNC ===================== */
 let sb = null;
 
@@ -3004,11 +3020,14 @@ function deleteGame(id) {
 
 /* ===================== ADMIN TOGGLE & AUTH ===================== */
 function toggleAdminPrompt() {
+    const btn = $('adminToggleBtn');
     if (isAdmin) {
         isAdmin = false;
         sessionStorage.setItem('mx_isAdmin', 'false');
         document.body.classList.remove('admin-mode');
-        $('adminToggleBtn').textContent = '👑 Entrar';
+        if (btn) btn.textContent = '👑 Entrar';
+        updateAdminUI();
+        updateAuthUI();
         renderMods();
         renderGames();
         renderMural();
@@ -3020,7 +3039,9 @@ function toggleAdminPrompt() {
             isAdmin = true;
             sessionStorage.setItem('mx_isAdmin', 'true');
             document.body.classList.add('admin-mode');
-            $('adminToggleBtn').textContent = '👑 Sair do Admin';
+            if (btn) btn.textContent = '👑 Sair do Admin';
+            updateAdminUI();
+            updateAuthUI();
             renderMods();
             renderGames();
             renderMural();
@@ -3237,10 +3258,8 @@ window.addEventListener('DOMContentLoaded', () => {
     $('headerYtLink').href = CFG.youtube;
     $('pixKeyText').textContent = CFG.pix;
 
-    if (isAdmin) {
-        document.body.classList.add('admin-mode');
-        $('adminToggleBtn').textContent = '👑 Sair do Admin';
-    }
+    updateAdminUI();
+    updateAuthUI();
 
     updateStats();
     renderFilters();
