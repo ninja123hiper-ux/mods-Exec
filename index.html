@@ -460,19 +460,21 @@
         /* ============== BARRA DE BUSCA ============== */
         .search-wrap {
             position: relative;
-            margin-bottom: 16px;
+            max-width: 620px;
+            width: 100%;
+            margin-bottom: 20px;
             animation: fadeInUp 0.45s var(--ease) 0.15s both;
         }
 
         .search-bar {
             width: 100%;
-            height: 52px;
+            height: 44px;
             background: rgba(15, 23, 42, 0.85);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 14px 48px 14px 50px;
+            border-radius: 10px;
+            padding: 10px 42px 10px 44px;
             color: var(--text-main);
-            font-size: 15.5px;
+            font-size: 14.5px;
             transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
         }
 
@@ -484,9 +486,11 @@
 
         .search-icon {
             position: absolute;
-            left: 18px;
+            left: 14px;
             top: 50%;
             transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
             color: var(--text-muted);
             pointer-events: none;
         }
@@ -787,18 +791,21 @@
 
         /* ============== COMUNIDADES (GRID DE JOGOS) ============== */
         .games-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        gap: 24px;
-    }
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(175px, 205px));
+            gap: 20px;
+            justify-content: flex-start;
+        }
 
         .game-card {
+            max-width: 205px;
+            width: 100%;
             background: var(--panel-bg);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
             overflow: hidden;
             cursor: pointer;
-            transition: transform 0.2s var(--ease), border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+            transition: transform 0.22s var(--ease), border-color 0.22s var(--ease), box-shadow 0.22s var(--ease);
             position: relative;
             display: flex;
             flex-direction: column;
