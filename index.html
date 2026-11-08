@@ -1319,8 +1319,9 @@
                     <input type="file" id="importInput" accept=".json" hidden onchange="importData(event)">
                 </div>
                 <select class="sort-select" id="sortSelect" onchange="onSortChange(this.value)">
+                    <option value="default" selected>Ordem de postagem (Novos embaixo)</option>
+                    <option value="new">Mais recentes (Novos no topo)</option>
                     <option value="dl">Mais baixados</option>
-                    <option value="new">Mais recentes</option>
                     <option value="votes">Melhor avaliados (👍)</option>
                     <option value="az">Ordem alfabética (A–Z)</option>
                 </select>
@@ -2593,7 +2594,7 @@ async function syncFromSupabase() {
             renderFilters();
         }
 
-        const { data: mData, error: mErr } = await sb.from('mods').select('*').order('id', { ascending: false });
+        const { data: mData, error: mErr } = await sb.from('mods').select('*').order('id', { ascending: true });
         if (!mErr && mData && mData.length > 0) {
             mods = mData;
             saveStorage('mx_mods', mods);
@@ -2671,7 +2672,7 @@ let currentSection = 'games';
 let selectedGame = 'todos';
 let selectedCategory = 'Todas';
 let searchQuery = '';
-let currentSort = 'dl';
+let currentSort = 'default';
 let editingModId = null;
 let currentDetailMod = null;
 
@@ -2788,13 +2789,20 @@ function renderMods() {
         return true;
     });
 
-    // Ordenação
+    // Ordenação com BepInExPack SEMPRE fixado no topo em 1º lugar
     list.sort((a, b) => {
+        const isA_bep = (a.name || '').toLowerCase().includes('bepinex');
+        const isB_bep = (b.name || '').toLowerCase().includes('bepinex');
+        if (isA_bep && !isB_bep) return -1;
+        if (!isA_bep && isB_bep) return 1;
+
         if (currentSort === 'dl') return (b.dl || 0) - (a.dl || 0);
         if (currentSort === 'new') return (b.at || 0) - (a.at || 0);
         if (currentSort === 'votes') return ((b.ok || 0) - (b.old || 0)) - ((a.ok || 0) - (a.old || 0));
         if (currentSort === 'az') return a.name.localeCompare(b.name);
-        return 0;
+        
+        // Padrão (default): ordem de postagem, novos vão para baixo
+        return (a.id || 0) - (b.id || 0);
     });
 
     const container = $('modsList');
@@ -2822,7 +2830,8 @@ function renderMods() {
                     <div class="mod-details">
                         <div class="mod-title-row">
                             <h4 class="mod-title">${esc(m.name)}</h4>
-                            ${m.featured ? `<span class="badge-recommended">⭐ Recomendado pelo Dono</span>` : ''}
+                            ${(m.name || '').toLowerCase().includes('bepinex') ? `<span class="badge-bepinex" style="background:rgba(255,170,0,0.18); color:#ffb700; border:1px solid #ffaa00; border-radius:4px; font-size:11px; padding:2px 7px; font-weight:700;">📌 Pré-requisito Obrigatório</span>` : ''}
+                            ${m.featured && !(m.name || '').toLowerCase().includes('bepinex') ? `<span class="badge-recommended">⭐ Recomendado pelo Dono</span>` : ''}
                             <span class="badge-platform">${esc(m.platform || 'PC')}</span>
                         </div>
                         <p class="mod-desc-short">${esc(m.desc || 'Sem descrição informada.')}</p>
@@ -3338,20 +3347,36 @@ async function saveMod() {
         featured: $('formModFeatured').checked
     };
 
+    const newModObj = {
+        id: targetId,
+        dl: 0,
+        ok: 0,
+        old: 0,
+        at: Date.now(),
+        ...data
+    };
+
     if (editingModId) {
         const idx = mods.findIndex(x => x.id === editingModId);
         if (idx !== -1) {
             mods[idx] = { ...mods[idx], ...data };
         }
     } else {
-        mods.unshift({
-            id: targetId,
-            dl: 0,
-            ok: 0,
-            old: 0,
-            at: Date.now(),
-            ...data
-        });
+        // Novo arquivo vai para o final da lista (embaixo dos antigos)
+        mods.push(newModObj);
+    }
+
+    // Salvar diretamente no Supabase em tempo real
+    if (sb) {
+        try {
+            const modToUpsert = editingModId ? mods.find(x => x.id === editingModId) : newModObj;
+            if (modToUpsert) {
+                await sb.from('mods').upsert([modToUpsert]);
+                console.log('⚡ Mod sincronizado no Supabase:', modToUpsert.name);
+            }
+        } catch (sbErr) {
+            console.warn('Erro ao salvar mod no Supabase:', sbErr);
+        }
     }
 
     currentUploadedFile = null;
