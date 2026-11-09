@@ -1168,7 +1168,28 @@
             align-items: center;
             gap: 8px;
         }
-        .user-pill {
+        
+        .user-pill-avatar {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid var(--accent);
+            flex-shrink: 0;
+        }
+
+        img.comment-avatar {
+            border: 2px solid rgba(45, 230, 167, 0.4);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            object-fit: cover;
+        }
+
+        img.comment-avatar.is-owner {
+            border-color: var(--accent);
+            box-shadow: 0 0 12px rgba(45, 230, 167, 0.5);
+        }
+
+.user-pill {
             display: flex;
             align-items: center;
             gap: 6px;
@@ -1280,11 +1301,13 @@
                 <button class="btn btn-outline" id="signupBtn" onclick="openAuthModal('signup')">✨ Criar Conta</button>
                 
                 <div id="loggedInUserBox" style="display:none; align-items:center; gap:8px;">
-                    <div class="user-pill" id="userPill">
+                    <div class="user-pill" id="userPill" onclick="openAvatarModal()" style="cursor:pointer;" title="Clique para alterar sua foto de perfil">
+                        <img id="userPillAvatar" class="user-pill-avatar" style="display:none;" alt="Foto">
                         <span id="userPillIcon">🎮</span>
                         <span id="userPillName">Gamer</span>
                         <span id="userAdminBadge" class="admin-badge-tag" style="display:none;">ADMIN</span>
                     </div>
+                    <button class="btn btn-sm btn-outline" onclick="openAvatarModal()" title="Alterar foto de perfil" style="padding:4px 8px; font-size:12px;">📷 Foto</button>
                     <button class="btn btn-sm btn-outline btn-logout" onclick="handleLogout()" title="Sair da conta">Sair</button>
                 </div>
             </div>
@@ -1389,11 +1412,13 @@
                     <!-- Se estiver conectado: usa o mesmo usuário do topo do site automaticamente -->
                     <div id="muralLoggedInUser" style="display: flex; align-items: center; gap: 8px;">
                         <span style="font-size: 13px; color: var(--text-muted); font-weight: 500;">Comentando como:</span>
-                        <div class="user-pill" id="muralUserPill" style="padding: 4px 10px; font-size: 13px;">
+                        <div class="user-pill" id="muralUserPill" onclick="openAvatarModal()" style="padding: 4px 10px; font-size: 13px; cursor: pointer;" title="Clique para alterar sua foto de perfil">
+                            <img id="muralUserAvatar" class="user-pill-avatar" style="display:none;" alt="Foto">
                             <span id="muralUserIcon">🎮</span>
                             <span id="muralUserName">Gamer</span>
                             <span id="muralUserAdminTag" class="admin-badge-tag" style="display:none;">ADMIN</span>
                         </div>
+                        <button type="button" class="btn btn-sm btn-outline" onclick="openAvatarModal()" style="padding: 3px 8px; font-size: 11.5px;" title="Alterar foto de perfil">📷 Mudar Foto</button>
                     </div>
                     <!-- Se NÃO estiver conectado: campo de apelido ou botão de login -->
                     <div id="muralLoggedOutRow" style="display: none; align-items: center; gap: 10px; flex-wrap: wrap;">
@@ -1801,6 +1826,63 @@
 <!-- Toast Notifier -->
 <div id="toast"></div>
 
+
+<!-- Modal: Alterar Foto de Perfil -->
+<div class="modal-overlay" id="avatarModal">
+    <div class="modal" style="max-width: 440px;">
+        <h2 style="margin-bottom: 6px;">📷 Foto de Perfil</h2>
+        <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 20px;">
+            Escolha uma imagem do seu computador ou cole um link para personalizar seu avatar no site e nos comentários do mural.
+        </p>
+
+        <!-- Preview da Foto -->
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 20px;">
+            <div style="position: relative;">
+                <img id="avatarPreviewImg" src="" alt="Foto de perfil" style="width: 108px; height: 108px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent); box-shadow: 0 0 20px var(--accent-glow); display: none;">
+                <div id="avatarPreviewPlaceholder" style="width: 108px; height: 108px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-blue)); display: grid; place-items: center; font-size: 40px; font-weight: 800; color: #06231a; box-shadow: 0 0 20px var(--accent-glow);">
+                    N
+                </div>
+            </div>
+            <div id="avatarStatusMsg" style="margin-top: 10px; font-size: 12.5px; color: var(--accent); font-weight: 600;"></div>
+        </div>
+
+        <!-- Opção 1: Enviar do PC -->
+        <div class="form-group">
+            <label>Enviar do seu Computador (PNG, JPG, GIF, WebP)</label>
+            <input type="file" id="avatarFileInput" accept="image/*" style="display: none;" onchange="handleAvatarFileSelect(event)">
+            <button type="button" class="btn btn-outline" style="width: 100%; justify-content: center; padding: 10px; font-weight: 700;" onclick="$('avatarFileInput').click()">
+                📁 Escolher Foto do Computador...
+            </button>
+        </div>
+
+        <!-- Opção 2: Link da Internet -->
+        <div class="form-group">
+            <label>Ou Cole o Link Direto de uma Imagem</label>
+            <input type="url" id="avatarUrlInput" placeholder="https://exemplo.com/minha-foto.png" oninput="handleAvatarUrlInput(this.value)">
+        </div>
+
+        <!-- Avatares Rápidos Gamer -->
+        <div class="form-group" style="margin-bottom: 20px;">
+            <label style="margin-bottom: 8px;">Ou Escolha um Avatar Gamer Rápido:</label>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
+                <button type="button" class="btn btn-sm btn-outline" onclick="selectPresetAvatar('https://api.dicebear.com/7.x/bottts/svg?seed=NinjaExec')" title="Robô Gamer" style="padding: 4px 8px;">🤖 Robô</button>
+                <button type="button" class="btn btn-sm btn-outline" onclick="selectPresetAvatar('https://api.dicebear.com/7.x/pixel-art/svg?seed=NinjaExec')" title="Pixel Gamer" style="padding: 4px 8px;">👾 Pixel</button>
+                <button type="button" class="btn btn-sm btn-outline" onclick="selectPresetAvatar('https://api.dicebear.com/7.x/adventurer/svg?seed=NinjaExec')" title="Aventureiro" style="padding: 4px 8px;">🥷 Ninja</button>
+                <button type="button" class="btn btn-sm btn-outline" onclick="selectPresetAvatar('https://api.dicebear.com/7.x/thumbs/svg?seed=NinjaExec')" title="Gamer" style="padding: 4px 8px;">👑 Pro</button>
+                <button type="button" class="btn btn-sm btn-outline" onclick="selectPresetAvatar('https://api.dicebear.com/7.x/fun-emoji/svg?seed=NinjaExec')" title="Divertido" style="padding: 4px 8px;">😎 Emoji</button>
+            </div>
+        </div>
+
+        <div class="modal-actions" style="justify-content: space-between;">
+            <button type="button" class="btn btn-delete btn-sm" onclick="removeAvatar()" id="btnRemoveAvatar">🗑️ Remover Foto</button>
+            <div style="display: flex; gap: 8px;">
+                <button type="button" class="btn btn-outline" onclick="closeModals()">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="saveAvatarPhoto()" id="btnSaveAvatar">💾 Salvar Foto</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- ===================== JAVASCRIPT ===================== -->
 <script>
 /* ===================== CONFIGURAÇÕES GLOBAIS ===================== */
@@ -2084,6 +2166,238 @@ const DEFAULT_COMMENTS = [
 
 
 
+
+/* ===================== SISTEMA DE FOTO DE PERFIL / AVATAR ===================== */
+let currentAvatarData = '';
+let avatarFileToUpload = null;
+
+function getUserAvatar() {
+    if (currentProfile && currentProfile.avatar_url) return currentProfile.avatar_url;
+    if (currentUser && currentUser.user_metadata && currentUser.user_metadata.avatar_url) return currentUser.user_metadata.avatar_url;
+    const saved = localStorage.getItem('mx_user_avatar');
+    if (saved) return saved;
+    if (isAdmin) {
+        const adminAvatar = localStorage.getItem('mx_admin_avatar');
+        if (adminAvatar) return adminAvatar;
+    }
+    return '';
+}
+
+function openAvatarModal() {
+    const activeAvatar = getUserAvatar();
+    const previewImg = $('avatarPreviewImg');
+    const placeholder = $('avatarPreviewPlaceholder');
+    const urlInput = $('avatarUrlInput');
+    const statusMsg = $('avatarStatusMsg');
+    const name = (currentProfile && currentProfile.display_name) || (currentUser && currentUser.user_metadata?.display_name) || (currentUser && currentUser.email?.split('@')[0]) || 'NinjaExec';
+
+    if (statusMsg) statusMsg.textContent = '';
+    avatarFileToUpload = null;
+    currentAvatarData = activeAvatar;
+
+    if (placeholder) placeholder.textContent = (name || 'N').charAt(0).toUpperCase();
+
+    if (activeAvatar) {
+        if (previewImg) {
+            previewImg.src = activeAvatar;
+            previewImg.style.display = 'block';
+        }
+        if (placeholder) placeholder.style.display = 'none';
+        if (urlInput) urlInput.value = activeAvatar.startsWith('data:') ? '' : activeAvatar;
+    } else {
+        if (previewImg) previewImg.style.display = 'none';
+        if (placeholder) placeholder.style.display = 'grid';
+        if (urlInput) urlInput.value = '';
+    }
+
+    openModal('avatarModal');
+}
+
+function handleAvatarUrlInput(url) {
+    url = (url || '').trim();
+    const previewImg = $('avatarPreviewImg');
+    const placeholder = $('avatarPreviewPlaceholder');
+    avatarFileToUpload = null;
+    currentAvatarData = url;
+
+    if (url) {
+        if (previewImg) {
+            previewImg.src = url;
+            previewImg.style.display = 'block';
+            previewImg.onerror = () => {
+                previewImg.style.display = 'none';
+                if (placeholder) placeholder.style.display = 'grid';
+            };
+            previewImg.onload = () => {
+                previewImg.style.display = 'block';
+                if (placeholder) placeholder.style.display = 'none';
+            };
+        }
+    } else {
+        if (previewImg) previewImg.style.display = 'none';
+        if (placeholder) placeholder.style.display = 'grid';
+    }
+}
+
+function selectPresetAvatar(url) {
+    if ($('avatarUrlInput')) $('avatarUrlInput').value = url;
+    handleAvatarUrlInput(url);
+}
+
+function handleAvatarFileSelect(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+        return showToast('Por favor, selecione um arquivo de imagem (PNG, JPG, etc).');
+    }
+
+    if (file.size > 8 * 1024 * 1024) {
+        return showToast('A imagem é muito grande. Escolha uma foto de até 8MB.');
+    }
+
+    const reader = new FileReader();
+    reader.onload = evt => {
+        const img = new Image();
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256;
+            canvas.height = 256;
+            const ctx = canvas.getContext('2d');
+
+            const minSide = Math.min(img.width, img.height);
+            const sx = (img.width - minSide) / 2;
+            const sy = (img.height - minSide) / 2;
+
+            ctx.drawImage(img, sx, sy, minSide, minSide, 0, 0, 256, 256);
+
+            const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.88);
+            currentAvatarData = compressedDataUrl;
+            avatarFileToUpload = file;
+
+            const previewImg = $('avatarPreviewImg');
+            const placeholder = $('avatarPreviewPlaceholder');
+            if (previewImg) {
+                previewImg.src = compressedDataUrl;
+                previewImg.style.display = 'block';
+            }
+            if (placeholder) placeholder.style.display = 'none';
+            if ($('avatarUrlInput')) $('avatarUrlInput').value = '';
+
+            const status = $('avatarStatusMsg');
+            if (status) status.textContent = 'Imagem carregada! Clique em "Salvar Foto".';
+        };
+        img.src = evt.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+async function saveAvatarPhoto() {
+    const saveBtn = $('btnSaveAvatar');
+    if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.textContent = '⏳ Salvando...';
+    }
+
+    let finalUrl = currentAvatarData || ($('avatarUrlInput') ? $('avatarUrlInput').value.trim() : '');
+
+    try {
+        if (sb && (avatarFileToUpload || (finalUrl && finalUrl.startsWith('data:')))) {
+            showToast('📤 Enviando foto de perfil para a nuvem...');
+            const userId = (currentUser && currentUser.id) || (currentProfile && currentProfile.id) || 'user_' + Date.now();
+            const storagePath = `avatars/${userId}.jpg`;
+
+            let uploadPayload = avatarFileToUpload;
+            if (!uploadPayload && finalUrl.startsWith('data:')) {
+                const res = await fetch(finalUrl);
+                uploadPayload = await res.blob();
+            }
+
+            if (uploadPayload) {
+                const { error: upErr } = await sb.storage
+                    .from('mods-files')
+                    .upload(storagePath, uploadPayload, { upsert: true, contentType: 'image/jpeg' });
+                
+                if (!upErr) {
+                    const { data: pubData } = sb.storage.from('mods-files').getPublicUrl(storagePath);
+                    if (pubData && pubData.publicUrl) {
+                        finalUrl = pubData.publicUrl + '?t=' + Date.now();
+                    }
+                } else {
+                    console.warn('Aviso Supabase Storage ao enviar avatar:', upErr.message);
+                }
+            }
+        }
+
+        localStorage.setItem('mx_user_avatar', finalUrl);
+        if (isAdmin) localStorage.setItem('mx_admin_avatar', finalUrl);
+
+        if (!currentProfile) currentProfile = {};
+        currentProfile.avatar_url = finalUrl;
+        localStorage.setItem('mx_user_profile', JSON.stringify(currentProfile));
+
+        if (sb && currentUser) {
+            try {
+                await sb.auth.updateUser({ data: { avatar_url: finalUrl } });
+                sb.from('profiles').update({ avatar_url: finalUrl }).eq('id', currentUser.id).then(() => {});
+            } catch (authErr) {
+                console.warn('Erro ao atualizar avatar no Supabase Auth:', authErr);
+            }
+        }
+
+        const currentName = (currentProfile && currentProfile.display_name) || (currentUser && currentUser.user_metadata?.display_name) || (currentUser && currentUser.email?.split('@')[0]) || 'NinjaExec';
+        mural.forEach(c => {
+            if (c.author === currentName || (c.isOwner && isAdmin)) {
+                c.avatar = finalUrl;
+            }
+        });
+        saveStorage('mx_mural', mural);
+
+        updateAuthUI();
+        updateMuralAuthorUI();
+        renderMural();
+        closeModals();
+        showToast('🎉 Foto de perfil atualizada com sucesso!');
+    } catch (e) {
+        console.error('Erro ao salvar foto de perfil:', e);
+        showToast('Erro ao salvar foto: ' + e.message);
+    } finally {
+        if (saveBtn) {
+            saveBtn.disabled = false;
+            saveBtn.textContent = '💾 Salvar Foto';
+        }
+    }
+}
+
+async function removeAvatar() {
+    if (!confirm('Deseja realmente remover sua foto de perfil?')) return;
+    localStorage.removeItem('mx_user_avatar');
+    localStorage.removeItem('mx_admin_avatar');
+    if (currentProfile) delete currentProfile.avatar_url;
+    localStorage.setItem('mx_user_profile', JSON.stringify(currentProfile));
+
+    if (sb && currentUser) {
+        try {
+            await sb.auth.updateUser({ data: { avatar_url: '' } });
+            sb.from('profiles').update({ avatar_url: null }).eq('id', currentUser.id).then(() => {});
+        } catch(e) {}
+    }
+
+    const currentName = (currentProfile && currentProfile.display_name) || (currentUser && currentUser.user_metadata?.display_name) || (currentUser && currentUser.email?.split('@')[0]) || 'NinjaExec';
+    mural.forEach(c => {
+        if (c.author === currentName || (c.isOwner && isAdmin)) {
+            delete c.avatar;
+        }
+    });
+    saveStorage('mx_mural', mural);
+
+    updateAuthUI();
+    updateMuralAuthorUI();
+    renderMural();
+    closeModals();
+    showToast('Foto de perfil removida.');
+}
+
 /* ===================== SUPABASE AUTH & ADMIN SYSTEM ===================== */
 let currentUser = (() => { try { return JSON.parse(localStorage.getItem('mx_logged_user')); } catch(e) { return null; } })();
 let currentProfile = (() => { try { return JSON.parse(localStorage.getItem('mx_user_profile')); } catch(e) { return null; } })();
@@ -2268,7 +2582,13 @@ async function checkUserProfile(user) {
         if (!error && profile) {
             currentProfile = profile;
             isAdmin = (profile.is_admin === true);
+            if (profile.avatar_url) {
+                localStorage.setItem('mx_user_avatar', profile.avatar_url);
+            }
         } else {
+            if (user.user_metadata?.avatar_url) {
+                localStorage.setItem('mx_user_avatar', user.user_metadata.avatar_url);
+            }
             const isOwner = (user.email === 'ninja123hiper@gmail.com');
             const defaultProf = {
                 id: user.id,
@@ -2320,13 +2640,26 @@ function updateMuralAuthorUI() {
                             'Gamer';
 
         if (userName) userName.textContent = displayName;
+        const muralAvatar = $('muralUserAvatar');
+        const userAvatar = getUserAvatar();
+
+        if (userAvatar && muralAvatar) {
+            muralAvatar.src = userAvatar;
+            muralAvatar.style.display = 'inline-block';
+            if (userIcon) userIcon.style.display = 'none';
+        } else {
+            if (muralAvatar) muralAvatar.style.display = 'none';
+            if (userIcon) {
+                userIcon.style.display = 'inline-block';
+                userIcon.textContent = isAdmin ? '👑' : '🎮';
+            }
+        }
+
         if (isAdmin) {
             if (userPill) userPill.classList.add('is-admin');
-            if (userIcon) userIcon.textContent = '👑';
             if (userAdmin) userAdmin.style.display = 'inline-block';
         } else {
             if (userPill) userPill.classList.remove('is-admin');
-            if (userIcon) userIcon.textContent = '🎮';
             if (userAdmin) userAdmin.style.display = 'none';
         }
     } else {
@@ -2354,13 +2687,23 @@ function updateAuthUI() {
         const displayName = (currentProfile && currentProfile.display_name) || currentUser.user_metadata?.display_name || currentUser.email.split('@')[0];
         pillName.textContent = displayName;
 
+        const userAvatar = getUserAvatar();
+        const pillAvatar = $('userPillAvatar');
+        if (userAvatar && pillAvatar) {
+            pillAvatar.src = userAvatar;
+            pillAvatar.style.display = 'inline-block';
+            pillIcon.style.display = 'none';
+        } else {
+            if (pillAvatar) pillAvatar.style.display = 'none';
+            pillIcon.style.display = 'inline-block';
+            pillIcon.textContent = isAdmin ? '👑' : '🎮';
+        }
+
         if (isAdmin) {
             userPill.classList.add('is-admin');
-            pillIcon.textContent = '👑';
             adminBadge.style.display = 'inline-block';
         } else {
             userPill.classList.remove('is-admin');
-            pillIcon.textContent = '🎮';
             adminBadge.style.display = 'none';
         }
         updateMuralAuthorUI();
@@ -3266,9 +3609,13 @@ function renderMural() {
 
     container.innerHTML = mural.map(c => {
         const initial = (c.author || 'G').charAt(0).toUpperCase();
+        const avatarUrl = c.avatar || (c.isOwner && isAdmin ? getUserAvatar() : '');
+        const avatarHtml = avatarUrl ?
+            `<img src="${esc(avatarUrl)}" class="comment-avatar ${c.isOwner ? 'is-owner' : ''}" style="object-fit:cover;" alt="${esc(c.author)}" onerror="this.onerror=null; this.outerHTML='<div class=\'comment-avatar\'>${initial}</div>';">` :
+            `<div class="comment-avatar">${initial}</div>`;
         return `
         <div class="comment-card">
-            <div class="comment-avatar">${initial}</div>
+            ${avatarHtml}
             <div class="comment-content">
                 <div class="comment-header">
                     <div>
@@ -3311,12 +3658,14 @@ function postComment() {
         }
     }
 
+    const userAvatar = getUserAvatar();
     mural.unshift({
         id: Date.now(),
         author: author,
         text: text,
         at: Date.now(),
-        isOwner: isOwner
+        isOwner: isOwner,
+        avatar: userAvatar || ''
     });
 
     saveStorage('mx_mural', mural);
